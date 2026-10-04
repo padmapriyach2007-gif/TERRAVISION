@@ -119,6 +119,7 @@ html = html.replace(
 # STREAMLIT UI (ZERO-SCROLL VIEWPORT FIT)
 # ============================================================
 
+# Version build: 2026-10-04.v13-shining-stars
 components.html(
     html,
     height=740,
