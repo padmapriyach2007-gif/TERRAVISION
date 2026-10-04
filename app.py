@@ -1,5 +1,5 @@
-import streamlit as st
-import streamlit.components.v1 as components
+import streamlit as st  # type: ignore
+import streamlit.components.v1 as components  # type: ignore
 from pathlib import Path
 
 
@@ -12,6 +12,40 @@ st.set_page_config(
     page_icon="🌍",
     layout="wide",
     initial_sidebar_state="collapsed",
+)
+
+# Streamlit container styling: eliminate default padding, margins,
+# and scrollbars so the dashboard fits 100% within the viewport.
+st.markdown(
+    """
+    <style>
+    /* Remove default Streamlit header, footer, and padding */
+    #MainMenu, header, footer {
+        display: none !important;
+    }
+    .stApp > header {
+        display: none !important;
+    }
+    .block-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+    div[data-testid="stVerticalBlock"] {
+        gap: 0 !important;
+    }
+    iframe {
+        border: none !important;
+        width: 100% !important;
+        height: 100vh !important;
+    }
+    body {
+        margin: 0 !important;
+        overflow: hidden !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 
@@ -48,21 +82,17 @@ js = js_file.read_text(encoding="utf-8")
 # PREPARE HTML FOR STREAMLIT
 # ============================================================
 
-# Remove the original stylesheet reference because we inject
-# the CSS directly into the HTML.
-html = html.replace(
-    '<link rel="stylesheet" href="style.css">',
-    ""
-)
+# 1. Remove the external stylesheet link tags
+html = html.replace('<link rel="stylesheet" href="style.css">', '')
+html = html.replace('<link rel="stylesheet" href="./style.css">', '')
 
-# Remove the original JavaScript reference because we inject
-# the JavaScript directly into the HTML.
-html = html.replace(
-    '<script type="module" src="script.js"></script>',
-    ""
-)
+# 2. Remove the external script link tags
+html = html.replace('<script src="script.js"></script>', '')
+html = html.replace('<script src="./script.js"></script>', '')
+html = html.replace('<script type="module" src="script.js"></script>', '')
+html = html.replace('<script type="module" src="./script.js"></script>', '')
 
-# Inject CSS before </head>
+# 3. Inject CSS directly before </head>
 html = html.replace(
     "</head>",
     f"""
@@ -73,11 +103,11 @@ html = html.replace(
     """
 )
 
-# Inject JavaScript before </body>
+# 4. Inject JavaScript directly before </body>
 html = html.replace(
     "</body>",
     f"""
-    <script type="module">
+    <script>
     {js}
     </script>
     </body>
@@ -86,11 +116,11 @@ html = html.replace(
 
 
 # ============================================================
-# STREAMLIT UI
+# STREAMLIT UI (ZERO-SCROLL VIEWPORT FIT)
 # ============================================================
 
 components.html(
     html,
-    height=1200,
-    scrolling=True,
+    height=740,
+    scrolling=False,
 )
