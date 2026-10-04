@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        TerraVision — Quantum-Enhanced Earth Observation
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🌍
+            </div>
+
+            <div>
+                <strong>
+                    TerraVision
+                </strong>
+
+                <span>
+                    QUANTUM EARTH INTELLIGENCE
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="satellite-status">
+
+            <span class="status-dot"></span>
+
+            SATELLITE ANALYSIS ONLINE
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <button
+                class="nav-item active"
+                data-view="explorer"
+            >
+                🌍
+                <span>
+                    Earth Explorer
+                </span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="pipeline"
+            >
+                ⚛️
+                <span>
+                    Hybrid Pipeline
+                </span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="landcover"
+            >
+                🌱
+                <span>
+                    Land Cover
+                </span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="change"
+            >
+                🔄
+                <span>
+                    Change Detection
+                </span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="anomaly"
+            >
+                🚨
+                <span>
+                    Anomaly Monitor
+                </span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-view="quantum"
+            >
+                ⚛️
+                <span>
+                    Quantum Analysis
+                </span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="newAnalysisBtn"
+                class="secondary-btn"
+            >
+                ＋ New Analysis
+            </button>
+
+            <button
+                id="helpBtn"
+                class="secondary-btn"
+            >
+                ❓ Help & Guide
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="topbar">
+
+            <div>
+
+                <p class="eyebrow">
+                    EARTH OBSERVATION PLATFORM
+                </p>
+
+                <h2 id="pageTitle">
+                    Earth Explorer
+                </h2>
+
+                <p id="pageSubtitle">
+                    Explore and inspect satellite-style Earth observations.
+                </p>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <button
+                    id="connectSatellite"
+                    class="primary-btn"
+                >
+                    🛰️ Connect Satellite Data
+                </button>
+
+                <button
+                    id="reportBtn"
+                    class="icon-btn"
+                    title="Export report"
+                >
+                    ⬇
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             METADATA
+             ================================================= -->
+
+        <section class="metadata-grid">
+
+            <div class="meta-card">
+
+                <span>
+                    DATA SOURCE
+                </span>
+
+                <strong id="dataSource">
+                    Local Earth Dataset
+                </strong>
+
+            </div>
+
+
+            <div class="meta-card">
+
+                <span>
+                    DATASET
+                </span>
+
+                <strong id="datasetName">
+                    TerraVision Demo 2026
+                </strong>
+
+            </div>
+
+
+            <div class="meta-card">
+
+                <span>
+                    ANALYSIS STATUS
+                </span>
+
+                <strong id="analysisStatus">
+                    Ready
+                </strong>
+
+            </div>
+
+
+            <div class="meta-card">
+
+                <span>
+                    MODEL CONFIDENCE
+                </span>
+
+                <strong id="confidence">
+                    96.4%
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EXPLORER VIEW
+             ================================================= -->
+
+        <section
+            id="explorerView"
+            class="view-layer active"
+        >
+
+            <div class="dashboard-grid">
+
+
+                <!-- =================================================
+                     MAP / EARTH
+                     ================================================= -->
+
+                <div class="card map-card">
+
+                    <div class="card-head">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                EARTH EXPLORER
+                            </span>
+
+                            <h3>
+                                Interactive Earth Observation
+                            </h3>
+
+                        </div>
+
+
+                        <div class="map-tools">
+
+                            <button
+                                id="zoomOut"
+                                class="small-btn"
+                            >
+                                −
+                            </button>
+
+                            <span id="zoomValue">
+                                100%
+                            </span>
+
+                            <button
+                                id="zoomIn"
+                                class="small-btn"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- REAL EARTH -->
+
+                    <div
+                        id="map"
+                        class="map-area earth-map"
+                    >
+
+                        <!-- Three.js Earth -->
+
+                        <div
+                            id="earthGlobe"
+                            aria-label="Interactive realistic Earth globe"
+                        ></div>
+                        <div class="virtual-globe-toolbar">
+
+  <button id="globeCompass" title="Reset orientation">
+    🧭
+  </button>
+
+  <button id="globeZoomIn" title="Zoom in">
+    +
+  </button>
+
+  <button id="globeZoomOut" title="Zoom out">
+    −
+  </button>
+
+  <button id="earthAutoRotate" title="Toggle auto rotation">
+    ⏸
+  </button>
+
+  <button id="globeDayNight" title="Toggle day/night">
+    ☀
+  </button>
+
+  <button id="globeGrid" title="Toggle coordinates grid">
+    ⊕
+  </button>
+
+  <button id="globeReset" title="Reset globe">
+    ↺
+  </button>
+
+  <button id="globeFullscreen" title="Fullscreen">
+    ⛶
+  </button>
+
+</div>
+
+<div class="globe-coordinate-display">
+  <span>CURSOR</span>
+  <strong id="globeCursorCoords">Move over Earth</strong>
+</div>
+
+<div class="globe-status">
+  <span class="globe-live-dot"></span>
+  INTERACTIVE EARTH
+</div>
+
+                        <!-- Earth controls -->
+
+                        <div class="earth-controls">
+
+                            <button
+                                id="earthReset"
+                                title="Reset Earth"
+                            >
+                                ⟳
+                            </button>
+
+                            <button
+                                id="earthAutoRotate"
+                                title="Pause rotation"
+                            >
+                                ⏸
+                            </button>
+
+                            <button
+                                id="earthZoomOut"
+                                title="Zoom out"
+                            >
+                                −
+                            </button>
+
+                            <span id="earthZoomValue">
+                                100%
+                            </span>
+
+                            <button
+                                id="earthZoomIn"
+                                title="Zoom in"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+
+                        <!-- LIVE STATUS -->
+
+                        <div class="earth-status">
+
+                            <span class="earth-live-dot"></span>
+
+                            LIVE EARTH OBSERVATION
+
+                        </div>
+
+
+                        <!-- COORDINATES -->
+
+                        <div class="earth-coordinates">
+
+                            <div>
+
+                                LATITUDE
+
+                                <strong id="mapLat">
+                                    --
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                LONGITUDE
+
+                                <strong id="mapLng">
+                                    --
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LOCATION MARKER -->
+
+                        <div
+                            id="earthMarker"
+                            class="earth-marker hidden"
+                        >
+
+                            <div class="marker-ring"></div>
+
+                            <div class="marker-core"></div>
+
+                        </div>
+
+
+                        <!-- LOCATION INSPECTOR -->
+
+                        <div
+                            id="locationInspector"
+                            class="location-inspector"
+                        >
+
+                            <div class="inspector-header">
+
+                                <div>
+
+                                    <span class="inspector-kicker">
+                                        LOCATION INSPECTOR
+                                    </span>
+
+                                    <h3 id="inspectorTitle">
+                                        Select a location
+                                    </h3>
+
+                                </div>
+
+                                <button id="closeInspector">
+                                    ×
+                                </button>
+
+                            </div>
+
+
+                            <div class="inspector-status">
+
+                                <span></span>
+
+                                EARTH LOCATION SELECTED
+
+                            </div>
+
+
+                            <div class="location-main">
+
+                                <div class="location-icon">
+                                    📍
+                                </div>
+
+                                <div>
+
+                                    <strong id="inspectorPlace">
+                                        No location selected
+                                    </strong>
+
+                                    <small id="inspectorAddress">
+                                        Click anywhere on Earth
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="coordinate-grid">
+
+                                <div class="coordinate-card">
+
+                                    <span>
+                                        LATITUDE
+                                    </span>
+
+                                    <strong id="inspectorLat">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="coordinate-card">
+
+                                    <span>
+                                        LONGITUDE
+                                    </span>
+
+                                    <strong id="inspectorLng">
+                                        --
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="location-details">
+
+                                <div>
+
+                                    <span>
+                                        COUNTRY
+                                    </span>
+
+                                    <strong id="inspectorCountry">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        STATE / REGION
+                                    </span>
+
+                                    <strong id="inspectorState">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        CITY / DISTRICT
+                                    </span>
+
+                                    <strong id="inspectorCity">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <div>
+
+                                    <span>
+                                        CONTINENT
+                                    </span>
+
+                                    <strong id="inspectorContinent">
+                                        --
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="inspector-analysis">
+
+                                <div class="analysis-title">
+
+                                    <span>
+                                        ◈
+                                    </span>
+
+                                    EARTH OBSERVATION READY
+
+                                </div>
+
+                                <p id="inspectorAnalysis">
+
+                                    Select a point on the globe
+                                    to inspect its geographic
+                                    location and prepare it
+                                    for satellite-image analysis.
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="map-label earth-label">
+                            HYBRID SATELLITE ANALYSIS
+                        </div>
+
+
+                        <div class="map-label earth-mode">
+                            CNN → 8-D → PQC
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     LOCATION / ANALYSIS PANEL
+                     ================================================= -->
+
+                <div class="side-column">
+
+                    <div class="card">
+
+                        <div class="card-head compact">
+
+                            <div>
+
+                                <span class="section-kicker">
+                                    ANALYSIS
+                                </span>
+
+                                <h3>
+                                    Selected Region
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="emptyInspector"
+                            class="empty-state"
+                        >
+
+                            <div class="empty-icon">
+                                📍
+                            </div>
+
+                            <strong>
+                                No region selected
+                            </strong>
+
+                            <span>
+                                Click a point on Earth
+                                to inspect it.
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            id="locationDetails"
+                            class="location-summary hidden"
+                        >
+
+                            <div class="summary-location">
+
+                                <strong id="selectedLocation">
+                                    --
+                                </strong>
+
+                                <span>
+                                    <span id="selectedLat">
+                                        --
+                                    </span>
+                                    ,
+                                    <span id="selectedLng">
+                                        --
+                                    </span>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <div class="card-head compact">
+
+                            <div>
+
+                                <span class="section-kicker">
+                                    CLASSIFICATION
+                                </span>
+
+                                <h3>
+                                    Land Cover
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="classification-result">
+
+                            <div>
+
+                                <strong id="classificationResult">
+                                    Awaiting Analysis
+                                </strong>
+
+                                <p id="classificationDescription">
+                                    Select a location from Earth
+                                    Explorer and run classification.
+                                </p>
+
+                            </div>
+
+
+                            <div class="classification-score">
+
+                                <span>
+                                    SCORE
+                                </span>
+
+                                <strong id="classificationScore">
+                                    --
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card risk-panel">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                ANOMALY RISK
+                            </span>
+
+                            <h3>
+                                Environmental Risk
+                            </h3>
+
+                        </div>
+
+                        <div class="risk-value">
+
+                            <strong id="riskValue">
+                                24
+                            </strong>
+
+                            <span>
+                                /100
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div
+                                id="riskProgress"
+                                style="width:24%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PIPELINE VIEW
+             ================================================= -->
+
+        <section
+            id="pipelineView"
+            class="view-layer"
+        >
+
+            <div class="card pipeline-card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            HYBRID ARCHITECTURE
+                        </span>
+
+                        <h3>
+                            Classical Vision + Quantum Inference
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="pipeline-steps">
+
+                    <div class="pipeline-step">
+
+                        <span>
+                            🛰️
+                        </span>
+
+                        <strong>
+                            Satellite Imagery
+                        </strong>
+
+                        <small>
+                            Earth observation input
+                        </small>
+
+                    </div>
+
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+
+                    <div class="pipeline-step">
+
+                        <span>
+                            🧠
+                        </span>
+
+                        <strong>
+                            CNN / Vision
+                        </strong>
+
+                        <small>
+                            Spatial feature extraction
+                        </small>
+
+                    </div>
+
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+
+                    <div class="pipeline-step">
+
+                        <span>
+                            ◈
+                        </span>
+
+                        <strong>
+                            8-D Compression
+                        </strong>
+
+                        <small>
+                            Compact representation
+                        </small>
+
+                    </div>
+
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+
+                    <div class="pipeline-step quantum">
+
+                        <span>
+                            ⚛️
+                        </span>
+
+                        <strong>
+                            PQC / QML
+                        </strong>
+
+                        <small>
+                            Quantum inference
+                        </small>
+
+                    </div>
+
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+
+                    <div class="pipeline-step">
+
+                        <span>
+                            ⚡
+                        </span>
+
+                        <strong>
+                            Actionable Insight
+                        </strong>
+
+                        <small>
+                            Classification / change / risk
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            PROCESSING
+                        </span>
+
+                        <h3>
+                            Hybrid Processing Status
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="quantum-grid">
+
+                    <div class="quantum-card">
+
+                        <span>
+                            CNN FEATURES
+                        </span>
+
+                        <strong id="pipelineFeatures">
+                            8-D
+                        </strong>
+
+                    </div>
+
+                    <div class="quantum-card">
+
+                        <span>
+                            QUBITS
+                        </span>
+
+                        <strong>
+                            4
+                        </strong>
+
+                    </div>
+
+                    <div class="quantum-card">
+
+                        <span>
+                            ENTANGLEMENT
+                        </span>
+
+                        <strong>
+                            CNOT
+                        </strong>
+
+                    </div>
+
+                    <div class="quantum-card">
+
+                        <span>
+                            INFERENCE
+                        </span>
+
+                        <strong>
+                            PQC
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LAND COVER
+             ================================================= -->
+
+        <section
+            id="landcoverView"
+            class="view-layer"
+        >
+
+            <div class="card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            LAND COVER
+                        </span>
+
+                        <h3>
+                            Earth Surface Classification
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="class-grid">
+
+                    <div class="class-card">
+                        <span>🌾</span>
+                        <strong>Agriculture</strong>
+                        <small>Crop and cultivated land</small>
+                    </div>
+
+                    <div class="class-card">
+                        <span>🌳</span>
+                        <strong>Vegetation</strong>
+                        <small>Forest and natural vegetation</small>
+                    </div>
+
+                    <div class="class-card">
+                        <span>💧</span>
+                        <strong>Water</strong>
+                        <small>Rivers, lakes and reservoirs</small>
+                    </div>
+
+                    <div class="class-card">
+                        <span>🏙️</span>
+                        <strong>Urban</strong>
+                        <small>Built-up areas</small>
+                    </div>
+
+                    <div class="class-card">
+                        <span>🔥</span>
+                        <strong>Disturbed</strong>
+                        <small>Burned or disturbed surfaces</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CHANGE DETECTION
+             ================================================= -->
+
+        <section
+            id="changeView"
+            class="view-layer"
+        >
+
+            <div class="card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            CHANGE DETECTION
+                        </span>
+
+                        <h3>
+                            Baseline vs Current Observation
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="change-upload-grid">
+
+                    <div class="upload-box">
+
+                        <span>
+                            BASELINE
+                        </span>
+
+                        <strong>
+                            Upload image
+                        </strong>
+
+                        <input
+                            type="file"
+                            id="baselineUpload"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    <div class="change-arrow">
+                        →
+                    </div>
+
+
+                    <div class="upload-box">
+
+                        <span>
+                            CURRENT
+                        </span>
+
+                        <strong>
+                            Upload image
+                        </strong>
+
+                        <input
+                            type="file"
+                            id="currentUpload"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ANOMALY
+             ================================================= -->
+
+        <section
+            id="anomalyView"
+            class="view-layer"
+        >
+
+            <div class="card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            ANOMALY MONITOR
+                        </span>
+
+                        <h3>
+                            Environmental Disturbance Screening
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="metric-row">
+
+                    <div class="metric-card">
+
+                        <span>
+                            RISK
+                        </span>
+
+                        <strong>
+                            <span id="anomalyRisk">
+                                24
+                            </span>%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <span>
+                            PATTERN
+                        </span>
+
+                        <strong>
+                            <span id="patternProbability">
+                                0
+                            </span>%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="metric-card">
+
+                        <span>
+                            YEAR
+                        </span>
+
+                        <strong id="selectedYear">
+                            2026
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="year-control">
+
+                    <label>
+                        Observation Year
+                    </label>
+
+                    <input
+                        id="yearSlider"
+                        type="range"
+                        min="2015"
+                        max="2026"
+                        value="2026"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             QUANTUM VIEW
+             ================================================= -->
+
+        <section
+            id="quantumView"
+            class="view-layer"
+        >
+
+            <div class="card">
+
+                <div class="card-head">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            QUANTUM ANALYSIS
+                        </span>
+
+                        <h3>
+                            4-Qubit PQC State Analysis
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quantum-grid">
+
+                    <div class="quantum-card">
+
+                        <span>
+                            QUANTUM STATE
+                        </span>
+
+                        <strong id="quantumState">
+                            |000⟩
+                        </strong>
+
+                    </div>
+
+
+                    <div class="quantum-card">
+
+                        <span>
+                            ENTROPY
+                        </span>
+
+                        <strong id="entropyValue">
+                            0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="quantum-card">
+
+                        <span>
+                            PATTERN PROBABILITY
+                        </span>
+
+                        <strong id="patternProbabilityQuantum">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="quantum-card">
+
+                        <span>
+                            QUANTUM SCORE
+                        </span>
+
+                        <strong id="quantumScore">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quantum-result">
+
+                    <p id="quantumResult">
+                        Quantum analysis has not been executed yet.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     HELP MODAL
+     ========================================================= -->
+
+<div
+    id="helpModal"
+    class="modal hidden"
+>
+
+    <div class="modal-card">
+
+        <button
+            id="closeHelp"
+            class="modal-close"
+        >
+            ×
+        </button>
+
+        <h2>
+            TerraVision
+        </h2>
+
+        <p>
+            Hybrid Quantum Satellite-Image Analysis
+        </p>
+
+        <div class="help-list">
+
+            <div>
+                🌍
+                <span>
+                    Drag the Earth to rotate it.
+                </span>
+            </div>
+
+            <div>
+                🔍
+                <span>
+                    Use the mouse wheel or controls to zoom.
+                </span>
+            </div>
+
+            <div>
+                📍
+                <span>
+                    Click any visible point on Earth
+                    to inspect its location.
+                </span>
+            </div>
+
+            <div>
+                ⚛️
+                <span>
+                    CNN features are compressed and
+                    passed through the simulated PQC.
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- =========================================================
+     TENSORFLOW + MOBILENET
+     ========================================================= -->
+
+<script
+    defer
+    src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"
+></script>
+
+<script
+    defer
+    src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"
+></script>
+
+
+<!-- =========================================================
+     MAIN APPLICATION
+     ========================================================= -->
+
+<script
+    type="module"
+    src="script.js"
+></script>
+
+</body>
+
+</html>
