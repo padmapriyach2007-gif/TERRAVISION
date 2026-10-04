@@ -2,1477 +2,1286 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="TerraVision VNQFF-09 — Quantum-Enhanced Earth Observation Analysis. Hybrid Classical CNN and 4-Qubit PQC/QML pipeline for satellite imagery analytics.">
+    <title>TerraVision — VNQFF-09 Quantum-Enhanced Earth Observation</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        TerraVision — Quantum-Enhanced Earth Observation
-    </title>
-
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        rel="stylesheet"
-        href="style.css"
-    >
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Standalone Three.js and OrbitControls (No importmap or bare specifier issues) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- TensorFlow.js and MobileNet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"></script>
 </head>
 
 <body>
-
-<div class="app">
-
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
-
-    <aside class="sidebar">
-
-        <div class="brand">
-
-            <div class="brand-icon">
-                🌍
+    <div class="app">
+        <!-- =====================================================
+             SIDEBAR NAVIGATION
+             ===================================================== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <div class="brand-icon" id="brandLogo">🌍</div>
+                <div>
+                    <strong>TerraVision</strong>
+                    <span>QUANTUM EARTH OBSERVATION</span>
+                </div>
             </div>
 
-            <div>
-                <strong>
-                    TerraVision
-                </strong>
+            <!-- VNQFF-09 Mission Badge Trigger -->
+            <button class="vnqff-badge-card" id="openMissionModalBtn"
+                title="Click to view VNQFF-09 Mission Architecture">
+                <div class="vnqff-tag">VNQFF-09</div>
+                <div class="vnqff-label">Quantum Earth Analysis</div>
+                <div class="vnqff-sub">Hybrid CNN + PQC / QML ↗</div>
+            </button>
 
-                <span>
-                    QUANTUM EARTH INTELLIGENCE
-                </span>
+            <div class="satellite-status">
+                <span class="status-dot"></span>
+                <span id="telemetryStatusText">SATELLITE DOWNLINK ONLINE</span>
             </div>
 
-        </div>
-
-
-        <div class="satellite-status">
-
-            <span class="status-dot"></span>
-
-            SATELLITE ANALYSIS ONLINE
-
-        </div>
-
-
-        <nav class="navigation">
-
-            <button
-                class="nav-item active"
-                data-view="explorer"
-            >
-                🌍
-                <span>
-                    Earth Explorer
-                </span>
-            </button>
-
-            <button
-                class="nav-item"
-                data-view="pipeline"
-            >
-                ⚛️
-                <span>
-                    Hybrid Pipeline
-                </span>
-            </button>
-
-            <button
-                class="nav-item"
-                data-view="landcover"
-            >
-                🌱
-                <span>
-                    Land Cover
-                </span>
-            </button>
-
-            <button
-                class="nav-item"
-                data-view="change"
-            >
-                🔄
-                <span>
-                    Change Detection
-                </span>
-            </button>
-
-            <button
-                class="nav-item"
-                data-view="anomaly"
-            >
-                🚨
-                <span>
-                    Anomaly Monitor
-                </span>
-            </button>
-
-            <button
-                class="nav-item"
-                data-view="quantum"
-            >
-                ⚛️
-                <span>
-                    Quantum Analysis
-                </span>
-            </button>
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <button
-                id="newAnalysisBtn"
-                class="secondary-btn"
-            >
-                ＋ New Analysis
-            </button>
-
-            <button
-                id="helpBtn"
-                class="secondary-btn"
-            >
-                ❓ Help & Guide
-            </button>
-
-        </div>
-
-    </aside>
-
-
-    <!-- =====================================================
-         MAIN
-         ===================================================== -->
-
-    <main class="main">
-
-        <!-- HEADER -->
-
-        <header class="topbar">
-
-            <div>
-
-                <p class="eyebrow">
-                    EARTH OBSERVATION PLATFORM
-                </p>
-
-                <h2 id="pageTitle">
-                    Earth Explorer
-                </h2>
-
-                <p id="pageSubtitle">
-                    Explore and inspect satellite-style Earth observations.
-                </p>
-
-            </div>
-
-
-            <div class="top-actions">
-
-                <button
-                    id="connectSatellite"
-                    class="primary-btn"
-                >
-                    🛰️ Connect Satellite Data
+            <!-- Navigation Views -->
+            <nav class="navigation" aria-label="Main Navigation">
+                <button class="nav-item active" data-view="explorer" id="nav-explorer">
+                    <span class="nav-icon">🌍</span>
+                    <span>Earth Explorer</span>
                 </button>
-
-                <button
-                    id="reportBtn"
-                    class="icon-btn"
-                    title="Export report"
-                >
-                    ⬇
+                <button class="nav-item" data-view="pipeline" id="nav-pipeline">
+                    <span class="nav-icon">⚛️</span>
+                    <span>Hybrid Pipeline</span>
                 </button>
+                <button class="nav-item" data-view="landcover" id="nav-landcover">
+                    <span class="nav-icon">🌱</span>
+                    <span>Land Cover</span>
+                </button>
+                <button class="nav-item" data-view="change" id="nav-change">
+                    <span class="nav-icon">🔄</span>
+                    <span>Change Detection</span>
+                </button>
+                <button class="nav-item" data-view="anomaly" id="nav-anomaly">
+                    <span class="nav-icon">🚨</span>
+                    <span>Anomaly Monitor</span>
+                </button>
+                <button class="nav-item" data-view="quantum" id="nav-quantum">
+                    <span class="nav-icon">🔬</span>
+                    <span>Quantum Analysis</span>
+                </button>
+                <button class="nav-item" data-view="applicability" id="nav-applicability">
+                    <span class="nav-icon">🎯</span>
+                    <span>Applicability Studio</span>
+                </button>
+            </nav>
 
+            <!-- Applicability Domain Quick Jumps -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">APPLICABILITY DOMAINS</div>
+                <div class="applicability-pills">
+                    <button class="app-pill" data-domain="agriculture" title="Agriculture & Crop Health">🌾
+                        Agriculture</button>
+                    <button class="app-pill" data-domain="water" title="Water Management & Reservoirs">💧 Water
+                        Mgmt</button>
+                    <button class="app-pill" data-domain="urban" title="Urban Planning & Density">🏙️ Urban
+                        Plan</button>
+                    <button class="app-pill" data-domain="disaster" title="Disaster & Wildfire Monitoring">🚨
+                        Disaster</button>
+                    <button class="app-pill" data-domain="space" title="Space Constellations & Downlinks">🛰️ Space
+                        Ops</button>
+                </div>
             </div>
 
-        </header>
-
-
-        <!-- =================================================
-             METADATA
-             ================================================= -->
-
-        <section class="metadata-grid">
-
-            <div class="meta-card">
-
-                <span>
-                    DATA SOURCE
-                </span>
-
-                <strong id="dataSource">
-                    Local Earth Dataset
-                </strong>
-
+            <div class="sidebar-bottom">
+                <button id="newAnalysisBtn" class="secondary-btn">＋ New Analysis</button>
+                <button id="helpBtn" class="secondary-btn">❓ Help & Guide</button>
             </div>
+        </aside>
 
+        <!-- =====================================================
+             MAIN CONTENT AREA
+             ===================================================== -->
+        <main class="main" id="mainContainer">
+            <!-- HEADER / TOPBAR -->
+            <header class="topbar">
+                <div>
+                    <div class="top-tag-row">
+                        <p class="eyebrow">EARTH OBSERVATION PLATFORM</p>
+                        <span class="pill-chip" id="quantumBadge">4-QUBIT PQC ENGINES ACTIVE</span>
+                    </div>
+                    <h2 id="pageTitle">Earth Explorer</h2>
+                    <p id="pageSubtitle">Explore and inspect satellite-style Earth observations with 3D geospatial
+                        targeting.</p>
+                </div>
 
-            <div class="meta-card">
+                <div class="top-actions">
+                    <button id="quickVnqffBtn" class="mission-cta-btn" title="Open VNQFF-09 Mission Brief">
+                        <span class="mission-code">VNQFF-09</span> Mission Spec
+                    </button>
+                    <button id="connectSatellite" class="primary-btn">
+                        🛰️ Connect Satellite Data
+                    </button>
+                    <button id="reportBtn" class="icon-btn" title="Export Full Intelligence Report">
+                        ⬇ Export
+                    </button>
+                </div>
+            </header>
 
-                <span>
-                    DATASET
-                </span>
+            <!-- =================================================
+                 REAL-TIME TELEMETRY METADATA GRID
+                 ================================================= -->
+            <section class="metadata-grid">
+                <div class="meta-card">
+                    <span>DATA SOURCE</span>
+                    <strong id="dataSource">Sentinel-2 MSI / Landsat-9</strong>
+                </div>
+                <div class="meta-card">
+                    <span>DATASET</span>
+                    <strong id="datasetName">VNQFF Earth Intel 2026</strong>
+                </div>
+                <div class="meta-card">
+                    <span>ANALYSIS STATUS</span>
+                    <strong id="analysisStatus">Hybrid PQC Ready</strong>
+                </div>
+                <div class="meta-card">
+                    <span>MODEL CONFIDENCE</span>
+                    <strong id="confidence">96.4%</strong>
+                </div>
+            </section>
 
-                <strong id="datasetName">
-                    TerraVision Demo 2026
-                </strong>
+            <!-- =================================================
+                 1. EXPLORER VIEW (3D Interactive Earth & Geolocation)
+                 ================================================= -->
+            <section id="explorerView" class="view-layer active">
+                <div class="dashboard-grid">
+                    <!-- 3D GLOBE CONTAINER -->
+                    <div class="card map-card">
+                        <div class="card-head">
+                            <div>
+                                <span class="section-kicker">EARTH EXPLORER</span>
+                                <h3>Interactive Earth Observation Globe</h3>
+                            </div>
+                            <div class="map-presets-dropdown">
+                                <label for="locationPresetsSelect">Target Preset:</label>
+                                <select id="locationPresetsSelect" class="styled-select">
+                                    <option value="">-- Choose Geolocation --</option>
+                                    <optgroup label="🌾 Agriculture">
+                                        <option value="california">Central Valley, CA (Crop Health / NDVI)</option>
+                                        <option value="punjab">Punjab Basin, India (Intensive Cropland)</option>
+                                        <option value="cerrado">Cerrado Farmland, Brazil (Soybean Grid)</option>
+                                    </optgroup>
+                                    <optgroup label="💧 Water Management">
+                                        <option value="lakemead">Lake Mead Reservoir, NV/AZ (Water Depletion)</option>
+                                        <option value="nile">Nile Delta, Egypt (Irrigation & Inflow)</option>
+                                        <option value="aral">Aral Sea Basin (Desiccation Tracking)</option>
+                                    </optgroup>
+                                    <optgroup label="🏙️ Urban Planning">
+                                        <option value="tokyo">Tokyo Bay, Japan (High-Density Megacity)</option>
+                                        <option value="shenzhen">Shenzhen, China (Urban Expansion)</option>
+                                        <option value="paris">Paris Metro, France (Built-up Heat Island)</option>
+                                    </optgroup>
+                                    <optgroup label="🚨 Disaster Monitoring">
+                                        <option value="pantanal">Pantanal Wetlands (Wildfire Burn Scar)</option>
+                                        <option value="amazon">Amazon Basin (Deforestation Boundary)</option>
+                                        <option value="kerala">Kerala Coast (Monsoon Inundation Risk)</option>
+                                    </optgroup>
+                                    <optgroup label="🛰️ Space Operations">
+                                        <option value="svalbard">Svalbard Ground Station (Polar Downlink)</option>
+                                        <option value="guiana">Guiana Space Centre, Kourou (Equatorial Launch)</option>
+                                        <option value="kennedy">Kennedy Space Center, FL (Constellation Hub)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
 
-            </div>
+                        <!-- REAL THREE.JS EARTH GLOBE -->
+                        <div id="map" class="map-area earth-map">
+                            <div id="earthGlobe" aria-label="Interactive realistic Earth globe"></div>
 
+                            <!-- Toolbar Overlay -->
+                            <div class="virtual-globe-toolbar">
+                                <button id="globeCompass" title="Reset North orientation">🧭</button>
+                                <button id="globeZoomIn" title="Zoom in">+</button>
+                                <button id="globeZoomOut" title="Zoom out">−</button>
+                                <button id="earthAutoRotate" title="Toggle Auto-Rotation">⏸</button>
+                                <button id="globeDayNight" title="Toggle Day/Night Light">☀</button>
+                                <button id="globeGrid" title="Toggle Coordinates Grid">⊕</button>
+                                <button id="globeReset" title="Reset Globe View">↺</button>
+                                <button id="globeFullscreen" title="Toggle Fullscreen">⛶</button>
+                            </div>
 
-            <div class="meta-card">
+                            <!-- Live Coordinates Tooltip -->
+                            <div class="globe-coordinate-display">
+                                <span>POINTER</span>
+                                <strong id="globeCursorCoords">Move over Earth to inspect</strong>
+                            </div>
 
-                <span>
-                    ANALYSIS STATUS
-                </span>
+                            <div class="globe-status">
+                                <span class="globe-live-dot"></span>
+                                INTERACTIVE 3D GLOBE (WEBGL)
+                            </div>
 
-                <strong id="analysisStatus">
-                    Ready
-                </strong>
+                            <div class="map-label earth-label">
+                                HYBRID SATELLITE ANALYSIS
+                            </div>
 
-            </div>
+                            <div class="map-label earth-mode" id="mapModeLabel">
+                                CNN → 8-D → PQC
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- INSPECTOR SIDE PANEL -->
+                    <div class="side-column">
+                        <!-- Location Inspector Card -->
+                        <div class="card" id="locationInspectorCard">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">GEOSPATIAL INSPECTOR</span>
+                                    <h3 id="inspectorCardTitle">Target Region</h3>
+                                </div>
+                                <span class="badge-mini" id="inspectorSensorTag">Sentinel-2 10m</span>
+                            </div>
 
-            <div class="meta-card">
+                            <div id="emptyInspector" class="empty-state">
+                                <div class="empty-icon">📍</div>
+                                <strong>No region selected</strong>
+                                <span>Click anywhere on the 3D globe or pick a preset above to inspect telemetry.</span>
+                            </div>
 
-                <span>
-                    MODEL CONFIDENCE
-                </span>
+                            <div id="locationDetails" class="location-summary hidden">
+                                <div class="summary-location">
+                                    <div class="location-icon">📍</div>
+                                    <div>
+                                        <strong id="selectedLocation">Central Valley, CA</strong>
+                                        <small id="selectedSub">California, United States</small>
+                                    </div>
+                                </div>
 
-                <strong id="confidence">
-                    96.4%
-                </strong>
+                                <div class="coordinate-grid">
+                                    <div class="coordinate-card">
+                                        <span>LATITUDE</span>
+                                        <strong id="selectedLat">36.7783° N</strong>
+                                    </div>
+                                    <div class="coordinate-card">
+                                        <span>LONGITUDE</span>
+                                        <strong id="selectedLng">-119.4179° W</strong>
+                                    </div>
+                                    <div class="coordinate-card">
+                                        <span>BIOME / TERRAIN</span>
+                                        <strong id="selectedBiome">Intensive Farmland</strong>
+                                    </div>
+                                    <div class="coordinate-card">
+                                        <span>PRIMARY DOMAIN</span>
+                                        <strong id="selectedDomain">🌾 Agriculture</strong>
+                                    </div>
+                                </div>
 
-            </div>
+                                <!-- Multi-Domain Telemetry Breakdown for Picked Location -->
+                                <div class="target-domains-section">
+                                    <div class="target-domains-header">
+                                        <span>ALL APPLICABILITY DOMAINS AT TARGET</span>
+                                        <span class="badge-mini">5 Domains</span>
+                                    </div>
+                                    <div class="target-domains-grid" id="targetDomainsGrid">
+                                        <!-- Dynamically populated for any picked location on globe -->
+                                    </div>
+                                </div>
 
-        </section>
+                                <div class="inspector-cta-row">
+                                    <button class="primary-btn full-width" id="analyzeSelectedRegionBtn">
+                                        ⚛️ Run Hybrid Quantum Pipeline
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Real-time Classification Summary -->
+                        <div class="card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">CLASSIFICATION INFERENCE</span>
+                                    <h3>Land Cover State</h3>
+                                </div>
+                            </div>
+                            <div class="classification-result">
+                                <div>
+                                    <strong id="classificationResult">🌾 Agriculture (Cropland)</strong>
+                                    <p id="classificationDescription">Dense multi-crop pivot irrigation parcels detected
+                                        via CNN feature vector.</p>
+                                </div>
+                                <div class="classification-score">
+                                    <span>PQC SCORE</span>
+                                    <strong id="classificationScore">94.8%</strong>
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- =================================================
-             EXPLORER VIEW
-             ================================================= -->
+                        <!-- Anomaly / Risk Meter -->
+                        <div class="card risk-panel">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">ENVIRONMENTAL DISTURBANCE</span>
+                                    <h3>Anomaly Screening Index</h3>
+                                </div>
+                            </div>
+                            <div class="risk-value">
+                                <strong id="riskValue">24</strong>
+                                <span>/ 100 Risk</span>
+                            </div>
+                            <div class="progress">
+                                <div id="riskProgress" class="progress-bar" style="width:24%"></div>
+                            </div>
+                            <div class="risk-caption" id="riskCaption">Nominal: Seasonal moisture fluctuation within
+                                expected parameters.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <section
-            id="explorerView"
-            class="view-layer active"
-        >
-
-            <div class="dashboard-grid">
-
-
-                <!-- =================================================
-                     MAP / EARTH
-                     ================================================= -->
-
-                <div class="card map-card">
-
+            <!-- =================================================
+                 2. HYBRID PIPELINE VIEW (CNN -> 8-D -> PQC)
+                 ================================================= -->
+            <section id="pipelineView" class="view-layer">
+                <div class="card pipeline-card">
                     <div class="card-head">
-
                         <div>
-
-                            <span class="section-kicker">
-                                EARTH EXPLORER
-                            </span>
-
-                            <h3>
-                                Interactive Earth Observation
-                            </h3>
-
+                            <span class="section-kicker">VNQFF-09 ARCHITECTURE</span>
+                            <h3>Classical CNN Vision + 4-Qubit PQC Inference Pipeline</h3>
                         </div>
-
-
-                        <div class="map-tools">
-
-                            <button
-                                id="zoomOut"
-                                class="small-btn"
-                            >
-                                −
-                            </button>
-
-                            <span id="zoomValue">
-                                100%
-                            </span>
-
-                            <button
-                                id="zoomIn"
-                                class="small-btn"
-                            >
-                                +
-                            </button>
-
+                        <div class="pipeline-actions">
+                            <button id="runPipelineDemoBtn" class="primary-btn">▶ Execute Full Pipeline</button>
                         </div>
-
                     </div>
 
-
-                    <!-- REAL EARTH -->
-
-                    <div
-                        id="map"
-                        class="map-area earth-map"
-                    >
-
-                        <!-- Three.js Earth -->
-
-                        <div
-                            id="earthGlobe"
-                            aria-label="Interactive realistic Earth globe"
-                        ></div>
-                        <div class="virtual-globe-toolbar">
-
-  <button id="globeCompass" title="Reset orientation">
-    🧭
-  </button>
-
-  <button id="globeZoomIn" title="Zoom in">
-    +
-  </button>
-
-  <button id="globeZoomOut" title="Zoom out">
-    −
-  </button>
-
-  <button id="earthAutoRotate" title="Toggle auto rotation">
-    ⏸
-  </button>
-
-  <button id="globeDayNight" title="Toggle day/night">
-    ☀
-  </button>
-
-  <button id="globeGrid" title="Toggle coordinates grid">
-    ⊕
-  </button>
-
-  <button id="globeReset" title="Reset globe">
-    ↺
-  </button>
-
-  <button id="globeFullscreen" title="Fullscreen">
-    ⛶
-  </button>
-
-</div>
-
-<div class="globe-coordinate-display">
-  <span>CURSOR</span>
-  <strong id="globeCursorCoords">Move over Earth</strong>
-</div>
-
-<div class="globe-status">
-  <span class="globe-live-dot"></span>
-  INTERACTIVE EARTH
-</div>
-
-                        <!-- Earth controls -->
-
-                        <div class="earth-controls">
-
-                            <button
-                                id="earthReset"
-                                title="Reset Earth"
-                            >
-                                ⟳
-                            </button>
-
-                            <button
-                                id="earthAutoRotate"
-                                title="Pause rotation"
-                            >
-                                ⏸
-                            </button>
-
-                            <button
-                                id="earthZoomOut"
-                                title="Zoom out"
-                            >
-                                −
-                            </button>
-
-                            <span id="earthZoomValue">
-                                100%
-                            </span>
-
-                            <button
-                                id="earthZoomIn"
-                                title="Zoom in"
-                            >
-                                +
-                            </button>
-
+                    <!-- Flow Diagram -->
+                    <div class="pipeline-steps">
+                        <div class="pipeline-step active" id="pipeStep1">
+                            <span class="step-icon">🛰️</span>
+                            <strong>1. Satellite Imagery</strong>
+                            <small>Multi-band MSI acquisition</small>
+                            <span class="step-badge">10m / 30m Res</span>
                         </div>
-
-
-                        <!-- LIVE STATUS -->
-
-                        <div class="earth-status">
-
-                            <span class="earth-live-dot"></span>
-
-                            LIVE EARTH OBSERVATION
-
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step active" id="pipeStep2">
+                            <span class="step-icon">🧠</span>
+                            <strong>2. CNN Backbone</strong>
+                            <small>Spatial feature extraction</small>
+                            <span class="step-badge">MobileNet / Conv</span>
                         </div>
-
-
-                        <!-- COORDINATES -->
-
-                        <div class="earth-coordinates">
-
-                            <div>
-
-                                LATITUDE
-
-                                <strong id="mapLat">
-                                    --
-                                </strong>
-
-                            </div>
-
-
-                            <div>
-
-                                LONGITUDE
-
-                                <strong id="mapLng">
-                                    --
-                                </strong>
-
-                            </div>
-
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step active" id="pipeStep3">
+                            <span class="step-icon">◈</span>
+                            <strong>3. 8-D Compression</strong>
+                            <small>Latent bottleneck representation</small>
+                            <span class="step-badge">Vector z ∈ ℝ⁸</span>
                         </div>
-
-
-                        <!-- LOCATION MARKER -->
-
-                        <div
-                            id="earthMarker"
-                            class="earth-marker hidden"
-                        >
-
-                            <div class="marker-ring"></div>
-
-                            <div class="marker-core"></div>
-
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step quantum active" id="pipeStep4">
+                            <span class="step-icon">⚛️</span>
+                            <strong>4. 4-Qubit PQC / QML</strong>
+                            <small>Ry-CNOT-Rz variational inference</small>
+                            <span class="step-badge">Quantum Speedup</span>
                         </div>
-
-
-                        <!-- LOCATION INSPECTOR -->
-
-                        <div
-                            id="locationInspector"
-                            class="location-inspector"
-                        >
-
-                            <div class="inspector-header">
-
-                                <div>
-
-                                    <span class="inspector-kicker">
-                                        LOCATION INSPECTOR
-                                    </span>
-
-                                    <h3 id="inspectorTitle">
-                                        Select a location
-                                    </h3>
-
-                                </div>
-
-                                <button id="closeInspector">
-                                    ×
-                                </button>
-
-                            </div>
-
-
-                            <div class="inspector-status">
-
-                                <span></span>
-
-                                EARTH LOCATION SELECTED
-
-                            </div>
-
-
-                            <div class="location-main">
-
-                                <div class="location-icon">
-                                    📍
-                                </div>
-
-                                <div>
-
-                                    <strong id="inspectorPlace">
-                                        No location selected
-                                    </strong>
-
-                                    <small id="inspectorAddress">
-                                        Click anywhere on Earth
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="coordinate-grid">
-
-                                <div class="coordinate-card">
-
-                                    <span>
-                                        LATITUDE
-                                    </span>
-
-                                    <strong id="inspectorLat">
-                                        --
-                                    </strong>
-
-                                </div>
-
-
-                                <div class="coordinate-card">
-
-                                    <span>
-                                        LONGITUDE
-                                    </span>
-
-                                    <strong id="inspectorLng">
-                                        --
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="location-details">
-
-                                <div>
-
-                                    <span>
-                                        COUNTRY
-                                    </span>
-
-                                    <strong id="inspectorCountry">
-                                        --
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        STATE / REGION
-                                    </span>
-
-                                    <strong id="inspectorState">
-                                        --
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        CITY / DISTRICT
-                                    </span>
-
-                                    <strong id="inspectorCity">
-                                        --
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        CONTINENT
-                                    </span>
-
-                                    <strong id="inspectorContinent">
-                                        --
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="inspector-analysis">
-
-                                <div class="analysis-title">
-
-                                    <span>
-                                        ◈
-                                    </span>
-
-                                    EARTH OBSERVATION READY
-
-                                </div>
-
-                                <p id="inspectorAnalysis">
-
-                                    Select a point on the globe
-                                    to inspect its geographic
-                                    location and prepare it
-                                    for satellite-image analysis.
-
-                                </p>
-
-                            </div>
-
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step active" id="pipeStep5">
+                            <span class="step-icon">⚡</span>
+                            <strong>5. Actionable Intelligence</strong>
+                            <small>Classification & change alerts</small>
+                            <span class="step-badge">Instant Output</span>
                         </div>
-
-
-                        <div class="map-label earth-label">
-                            HYBRID SATELLITE ANALYSIS
-                        </div>
-
-
-                        <div class="map-label earth-mode">
-                            CNN → 8-D → PQC
-                        </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- =================================================
-                     LOCATION / ANALYSIS PANEL
-                     ================================================= -->
-
-                <div class="side-column">
+                <!-- 8-D Vector & Quantum Circuit Interactive Visualizer -->
+                <div class="two-col-grid">
+                    <div class="card">
+                        <div class="card-head">
+                            <div>
+                                <span class="section-kicker">LATENT REPRESENTATION</span>
+                                <h3>8-D Compressed Feature Vector</h3>
+                            </div>
+                            <button class="small-btn" id="randomizeVectorBtn">🎲 Randomize Vector</button>
+                        </div>
+                        <div class="vector-grid" id="vectorBarsContainer">
+                            <!-- Injected by script: 8 vector components -->
+                        </div>
+                        <div class="vector-math-note">
+                            Normalized spatial coordinates z₀ … z₇ ∈ [-π, +π] parameterizing Ry(θᵢ) and Rz(θⱼ) quantum
+                            gates.
+                        </div>
+                    </div>
 
                     <div class="card">
-
-                        <div class="card-head compact">
-
+                        <div class="card-head">
                             <div>
-
-                                <span class="section-kicker">
-                                    ANALYSIS
-                                </span>
-
-                                <h3>
-                                    Selected Region
-                                </h3>
-
+                                <span class="section-kicker">QUANTUM CIRCUIT DIAGRAM</span>
+                                <h3>4-Qubit PQC Ansatz (Ry-CNOT-Rz)</h3>
                             </div>
-
+                            <span class="badge-mini">Depth: 4 Gates / Qubit</span>
                         </div>
-
-
-                        <div
-                            id="emptyInspector"
-                            class="empty-state"
-                        >
-
-                            <div class="empty-icon">
-                                📍
+                        <div class="circuit-container" id="circuitDiagram">
+                            <div class="circuit-wire">
+                                <span class="qubit-label">|q₀⟩</span>
+                                <div class="wire-line">
+                                    <div class="gate gate-ry" id="gate-ry-0">Ry(z₀)</div>
+                                    <div class="gate-ctrl" id="ctrl-0">●</div>
+                                    <div class="wire-span"></div>
+                                    <div class="gate gate-rz" id="gate-rz-0">Rz(z₄)</div>
+                                    <div class="gate gate-meas">M_z</div>
+                                </div>
                             </div>
-
-                            <strong>
-                                No region selected
-                            </strong>
-
-                            <span>
-                                Click a point on Earth
-                                to inspect it.
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            id="locationDetails"
-                            class="location-summary hidden"
-                        >
-
-                            <div class="summary-location">
-
-                                <strong id="selectedLocation">
-                                    --
-                                </strong>
-
-                                <span>
-                                    <span id="selectedLat">
-                                        --
-                                    </span>
-                                    ,
-                                    <span id="selectedLng">
-                                        --
-                                    </span>
-                                </span>
-
+                            <div class="circuit-wire">
+                                <span class="qubit-label">|q₁⟩</span>
+                                <div class="wire-line">
+                                    <div class="gate gate-ry" id="gate-ry-1">Ry(z₁)</div>
+                                    <div class="gate-target" id="targ-1">⊕</div>
+                                    <div class="gate-ctrl" id="ctrl-1">●</div>
+                                    <div class="gate gate-rz" id="gate-rz-1">Rz(z₅)</div>
+                                    <div class="gate gate-meas">M_z</div>
+                                </div>
                             </div>
-
+                            <div class="circuit-wire">
+                                <span class="qubit-label">|q₂⟩</span>
+                                <div class="wire-line">
+                                    <div class="gate gate-ry" id="gate-ry-2">Ry(z₂)</div>
+                                    <div class="wire-span"></div>
+                                    <div class="gate-target" id="targ-2">⊕</div>
+                                    <div class="gate gate-rz" id="gate-rz-2">Rz(z₆)</div>
+                                    <div class="gate gate-meas">M_z</div>
+                                </div>
+                            </div>
+                            <div class="circuit-wire">
+                                <span class="qubit-label">|q₃⟩</span>
+                                <div class="wire-line">
+                                    <div class="gate gate-ry" id="gate-ry-3">Ry(z₃)</div>
+                                    <div class="wire-span"></div>
+                                    <div class="gate-target" id="targ-3">⊕</div>
+                                    <div class="gate gate-rz" id="gate-rz-3">Rz(z₇)</div>
+                                    <div class="gate gate-meas">M_z</div>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
+                </div>
 
-
-                    <div class="card">
-
-                        <div class="card-head compact">
-
-                            <div>
-
-                                <span class="section-kicker">
-                                    CLASSIFICATION
-                                </span>
-
-                                <h3>
-                                    Land Cover
-                                </h3>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="classification-result">
-
-                            <div>
-
-                                <strong id="classificationResult">
-                                    Awaiting Analysis
-                                </strong>
-
-                                <p id="classificationDescription">
-                                    Select a location from Earth
-                                    Explorer and run classification.
-                                </p>
-
-                            </div>
-
-
-                            <div class="classification-score">
-
-                                <span>
-                                    SCORE
-                                </span>
-
-                                <strong id="classificationScore">
-                                    --
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="card risk-panel">
-
+                <!-- Processing Metrics Grid -->
+                <div class="card">
+                    <div class="card-head">
                         <div>
+                            <span class="section-kicker">BENCHMARK COMPARISON</span>
+                            <h3>Hybrid Pipeline Performance Telemetry</h3>
+                        </div>
+                    </div>
+                    <div class="quantum-grid">
+                        <div class="quantum-card">
+                            <span>CNN EXTRACTION</span>
+                            <strong id="pipelineFeatures">8-D Latent</strong>
+                            <small>MobileNet V2 / Spectral</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>QUBITS</span>
+                            <strong>4 Qubits</strong>
+                            <small>16-D Hilbert Space</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>ENTANGLEMENT</span>
+                            <strong>CNOT Ladder</strong>
+                            <small>Concurrence: 0.88</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>QUANTUM LATENCY</span>
+                            <strong class="highlight-cyan">4.2 ms</strong>
+                            <small>8.9x Classical Speedup</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                            <span class="section-kicker">
-                                ANOMALY RISK
-                            </span>
-
-                            <h3>
-                                Environmental Risk
-                            </h3>
-
+            <!-- =================================================
+                 3. LAND COVER CLASSIFICATION VIEW
+                 ================================================= -->
+            <section id="landcoverView" class="view-layer">
+                <div class="dashboard-grid">
+                    <!-- Image Analysis Canvas -->
+                    <div class="card">
+                        <div class="card-head">
+                            <div>
+                                <span class="section-kicker">SURFACE OBSERVATION</span>
+                                <h3>Earth Surface Classification</h3>
+                            </div>
+                            <div class="canvas-controls">
+                                <label>Mask Opacity:</label>
+                                <input type="range" id="maskOpacitySlider" min="0" max="100" value="65"
+                                    class="small-slider">
+                                <span id="opacityVal">65%</span>
+                            </div>
                         </div>
 
-                        <div class="risk-value">
-
-                            <strong id="riskValue">
-                                24
-                            </strong>
-
-                            <span>
-                                /100
-                            </span>
-
+                        <!-- Sample Selector Bar -->
+                        <div class="sample-image-bar">
+                            <span class="bar-title">Presets:</span>
+                            <button class="sample-btn active" data-sample="agriculture">🌾 Farmland (Crop
+                                Circles)</button>
+                            <button class="sample-btn" data-sample="water">💧 Lake Mead Reservoir</button>
+                            <button class="sample-btn" data-sample="urban">🏙️ Coastal Metropolis</button>
+                            <button class="sample-btn" data-sample="disaster">🔥 Wildfire Scar</button>
+                            <button class="sample-btn" data-sample="forest">🌳 Amazon Rainforest</button>
+                            <label class="upload-chip" for="landcoverUpload" title="Upload Custom Satellite Image">
+                                📁 Upload Custom
+                                <input type="file" id="landcoverUpload" accept="image/*" class="sr-only">
+                            </label>
                         </div>
 
-                        <div class="progress">
+                        <!-- Satellite Canvas with segmentation mask -->
+                        <div class="canvas-wrapper">
+                            <canvas id="landcoverCanvas" width="560" height="400"></canvas>
+                            <div class="canvas-overlay-legend">
+                                <span class="legend-dot ag"></span> Agriculture
+                                <span class="legend-dot veg"></span> Vegetation
+                                <span class="legend-dot water"></span> Water
+                                <span class="legend-dot urban"></span> Urban
+                                <span class="legend-dot dist"></span> Disturbed
+                            </div>
+                        </div>
+                    </div>
 
-                            <div
-                                id="riskProgress"
-                                style="width:24%"
-                            ></div>
-
+                    <!-- Classification Breakdown -->
+                    <div class="side-column">
+                        <div class="card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">INFERENCE METRICS</span>
+                                    <h3>Class Distribution</h3>
+                                </div>
+                            </div>
+                            <div class="class-distribution-list" id="classDistList">
+                                <!-- Injected by JS -->
+                            </div>
                         </div>
 
+                        <div class="card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">ECOLOGICAL ANALYSIS</span>
+                                    <h3>Actionable Bio-Metrics</h3>
+                                </div>
+                            </div>
+                            <div class="bio-metrics-grid">
+                                <div class="bio-metric">
+                                    <span>NDVI INDEX</span>
+                                    <strong id="ndviValue">0.72 (Lush)</strong>
+                                </div>
+                                <div class="bio-metric">
+                                    <span>CANOPY INTEGRITY</span>
+                                    <strong id="canopyValue">91.4%</strong>
+                                </div>
+                                <div class="bio-metric">
+                                    <span>SHANNON DIVERSITY</span>
+                                    <strong id="shannonValue">1.48 bits</strong>
+                                </div>
+                                <div class="bio-metric">
+                                    <span>IRRIGATION EFFICIENCY</span>
+                                    <strong id="irrigationValue">Optimal</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
 
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             PIPELINE VIEW
-             ================================================= -->
-
-        <section
-            id="pipelineView"
-            class="view-layer"
-        >
-
-            <div class="card pipeline-card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            HYBRID ARCHITECTURE
-                        </span>
-
-                        <h3>
-                            Classical Vision + Quantum Inference
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="pipeline-steps">
-
-                    <div class="pipeline-step">
-
-                        <span>
-                            🛰️
-                        </span>
-
-                        <strong>
-                            Satellite Imagery
-                        </strong>
-
-                        <small>
-                            Earth observation input
-                        </small>
-
-                    </div>
-
-
-                    <div class="pipeline-arrow">
-                        →
-                    </div>
-
-
-                    <div class="pipeline-step">
-
-                        <span>
-                            🧠
-                        </span>
-
-                        <strong>
-                            CNN / Vision
-                        </strong>
-
-                        <small>
-                            Spatial feature extraction
-                        </small>
-
-                    </div>
-
-
-                    <div class="pipeline-arrow">
-                        →
-                    </div>
-
-
-                    <div class="pipeline-step">
-
-                        <span>
-                            ◈
-                        </span>
-
-                        <strong>
-                            8-D Compression
-                        </strong>
-
-                        <small>
-                            Compact representation
-                        </small>
-
-                    </div>
-
-
-                    <div class="pipeline-arrow">
-                        →
-                    </div>
-
-
-                    <div class="pipeline-step quantum">
-
-                        <span>
-                            ⚛️
-                        </span>
-
-                        <strong>
-                            PQC / QML
-                        </strong>
-
-                        <small>
-                            Quantum inference
-                        </small>
-
-                    </div>
-
-
-                    <div class="pipeline-arrow">
-                        →
-                    </div>
-
-
-                    <div class="pipeline-step">
-
-                        <span>
-                            ⚡
-                        </span>
-
-                        <strong>
-                            Actionable Insight
-                        </strong>
-
-                        <small>
-                            Classification / change / risk
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            PROCESSING
-                        </span>
-
-                        <h3>
-                            Hybrid Processing Status
-                        </h3>
-
-                    </div>
-
-                </div>
-
-                <div class="quantum-grid">
-
-                    <div class="quantum-card">
-
-                        <span>
-                            CNN FEATURES
-                        </span>
-
-                        <strong id="pipelineFeatures">
-                            8-D
-                        </strong>
-
-                    </div>
-
-                    <div class="quantum-card">
-
-                        <span>
-                            QUBITS
-                        </span>
-
-                        <strong>
-                            4
-                        </strong>
-
-                    </div>
-
-                    <div class="quantum-card">
-
-                        <span>
-                            ENTANGLEMENT
-                        </span>
-
-                        <strong>
-                            CNOT
-                        </strong>
-
-                    </div>
-
-                    <div class="quantum-card">
-
-                        <span>
-                            INFERENCE
-                        </span>
-
-                        <strong>
-                            PQC
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             LAND COVER
-             ================================================= -->
-
-        <section
-            id="landcoverView"
-            class="view-layer"
-        >
-
-            <div class="card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            LAND COVER
-                        </span>
-
-                        <h3>
-                            Earth Surface Classification
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
+                <!-- 5 Class Cards -->
                 <div class="class-grid">
-
-                    <div class="class-card">
-                        <span>🌾</span>
+                    <div class="class-card active" data-class="agriculture">
+                        <span class="class-emoji">🌾</span>
                         <strong>Agriculture</strong>
-                        <small>Crop and cultivated land</small>
+                        <small>Crop and cultivated land, pivot irrigation, orchards</small>
+                        <span class="class-coverage" id="cov-ag">42.8%</span>
                     </div>
-
-                    <div class="class-card">
-                        <span>🌳</span>
+                    <div class="class-card" data-class="vegetation">
+                        <span class="class-emoji">🌳</span>
                         <strong>Vegetation</strong>
-                        <small>Forest and natural vegetation</small>
+                        <small>Forest canopy, wetlands and natural flora</small>
+                        <span class="class-coverage" id="cov-veg">28.4%</span>
                     </div>
-
-                    <div class="class-card">
-                        <span>💧</span>
+                    <div class="class-card" data-class="water">
+                        <span class="class-emoji">💧</span>
                         <strong>Water</strong>
-                        <small>Rivers, lakes and reservoirs</small>
+                        <small>Rivers, reservoirs, lakes and coastal inflows</small>
+                        <span class="class-coverage" id="cov-water">12.6%</span>
                     </div>
-
-                    <div class="class-card">
-                        <span>🏙️</span>
+                    <div class="class-card" data-class="urban">
+                        <span class="class-emoji">🏙️</span>
                         <strong>Urban</strong>
-                        <small>Built-up areas</small>
+                        <small>Built-up settlements, highways, commercial docks</small>
+                        <span class="class-coverage" id="cov-urban">11.2%</span>
                     </div>
-
-                    <div class="class-card">
-                        <span>🔥</span>
+                    <div class="class-card" data-class="disturbed">
+                        <span class="class-emoji">🔥</span>
                         <strong>Disturbed</strong>
-                        <small>Burned or disturbed surfaces</small>
+                        <small>Wildfire burn scars, deforested clearings, erosion</small>
+                        <span class="class-coverage" id="cov-dist">5.0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 4. CHANGE DETECTION VIEW (Baseline vs Current)
+                 ================================================= -->
+            <section id="changeView" class="view-layer">
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="section-kicker">CHANGE DETECTION</span>
+                            <h3>Baseline vs. Current Observation Comparison</h3>
+                        </div>
+                        <div class="change-presets">
+                            <label>Historical Scenarios:</label>
+                            <select id="changePresetSelect" class="styled-select">
+                                <option value="lakemead">Lake Mead Water Depletion (2015 vs 2026)</option>
+                                <option value="amazon">Amazon Deforestation Border (2018 vs 2026)</option>
+                                <option value="urban">Coastal Urban Infrastructure Sprawl (2016 vs 2026)</option>
+                                <option value="wildfire">Wildfire Burn Scar Emergence (Pre vs Post Fire)</option>
+                            </select>
+                        </div>
                     </div>
 
+                    <!-- Split Wipe Canvas Comparison -->
+                    <div class="change-viewer-container">
+                        <div class="wipe-wrapper" id="wipeWrapper">
+                            <canvas id="baselineCanvas" class="wipe-layer wipe-base" width="700" height="380"></canvas>
+                            <canvas id="currentCanvas" class="wipe-layer wipe-curr" width="700" height="380"></canvas>
+                            <canvas id="diffCanvas" class="wipe-layer wipe-diff hidden" width="700"
+                                height="380"></canvas>
+                            <div class="wipe-handle" id="wipeHandle">
+                                <div class="wipe-line"></div>
+                                <div class="wipe-button">⬌</div>
+                            </div>
+                        </div>
+
+                        <div class="wipe-toolbar">
+                            <div class="wipe-modes">
+                                <button class="mode-toggle active" id="wipeSplitBtn">Split Slider</button>
+                                <button class="mode-toggle" id="wipeDiffBtn">Quantum Difference Heatmap</button>
+                                <button class="mode-toggle" id="wipeBlinkBtn">Toggle Flicker</button>
+                            </div>
+                            <div class="wipe-labels">
+                                <span>◀ BASELINE (2015)</span>
+                                <span>CURRENT (2026) ▶</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change Upload Boxes for Custom Images -->
+                    <div class="change-upload-grid">
+                        <div class="upload-box" id="baselineDropZone">
+                            <span>BASELINE OBSERVATION</span>
+                            <strong id="baselineName">Lake Mead (Historical 2015)</strong>
+                            <small>Drag or select baseline satellite image</small>
+                            <input type="file" id="baselineUpload" accept="image/*">
+                        </div>
+                        <div class="change-arrow">→</div>
+                        <div class="upload-box" id="currentDropZone">
+                            <span>CURRENT OBSERVATION</span>
+                            <strong id="currentName">Lake Mead (Current 2026)</strong>
+                            <small>Drag or select current satellite image</small>
+                            <input type="file" id="currentUpload" accept="image/*">
+                        </div>
+                    </div>
                 </div>
 
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             CHANGE DETECTION
-             ================================================= -->
-
-        <section
-            id="changeView"
-            class="view-layer"
-        >
-
-            <div class="card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            CHANGE DETECTION
-                        </span>
-
-                        <h3>
-                            Baseline vs Current Observation
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="change-upload-grid">
-
-                    <div class="upload-box">
-
-                        <span>
-                            BASELINE
-                        </span>
-
-                        <strong>
-                            Upload image
-                        </strong>
-
-                        <input
-                            type="file"
-                            id="baselineUpload"
-                            accept="image/*"
-                        >
-
-                    </div>
-
-
-                    <div class="change-arrow">
-                        →
-                    </div>
-
-
-                    <div class="upload-box">
-
-                        <span>
-                            CURRENT
-                        </span>
-
-                        <strong>
-                            Upload image
-                        </strong>
-
-                        <input
-                            type="file"
-                            id="currentUpload"
-                            accept="image/*"
-                        >
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             ANOMALY
-             ================================================= -->
-
-        <section
-            id="anomalyView"
-            class="view-layer"
-        >
-
-            <div class="card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            ANOMALY MONITOR
-                        </span>
-
-                        <h3>
-                            Environmental Disturbance Screening
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="metric-row">
-
-                    <div class="metric-card">
-
-                        <span>
-                            RISK
-                        </span>
-
-                        <strong>
-                            <span id="anomalyRisk">
-                                24
-                            </span>%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="metric-card">
-
-                        <span>
-                            PATTERN
-                        </span>
-
-                        <strong>
-                            <span id="patternProbability">
-                                0
-                            </span>%
-                        </strong>
-
-                    </div>
-
-
-                    <div class="metric-card">
-
-                        <span>
-                            YEAR
-                        </span>
-
-                        <strong id="selectedYear">
-                            2026
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="year-control">
-
-                    <label>
-                        Observation Year
-                    </label>
-
-                    <input
-                        id="yearSlider"
-                        type="range"
-                        min="2015"
-                        max="2026"
-                        value="2026"
-                    >
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             QUANTUM VIEW
-             ================================================= -->
-
-        <section
-            id="quantumView"
-            class="view-layer"
-        >
-
-            <div class="card">
-
-                <div class="card-head">
-
-                    <div>
-
-                        <span class="section-kicker">
-                            QUANTUM ANALYSIS
-                        </span>
-
-                        <h3>
-                            4-Qubit PQC State Analysis
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
+                <!-- Quantum Change Metrics -->
                 <div class="quantum-grid">
-
                     <div class="quantum-card">
-
-                        <span>
-                            QUANTUM STATE
-                        </span>
-
-                        <strong id="quantumState">
-                            |000⟩
-                        </strong>
-
+                        <span>QUANTUM FIDELITY (F)</span>
+                        <strong id="quantumFidelityVal">0.714</strong>
+                        <small>F = |⟨ψ_base|ψ_curr⟩|²</small>
                     </div>
-
-
                     <div class="quantum-card">
-
-                        <span>
-                            ENTROPY
-                        </span>
-
-                        <strong id="entropyValue">
-                            0.00
-                        </strong>
-
+                        <span>CHANGE DIVERGENCE</span>
+                        <strong class="highlight-cyan" id="changeDivergenceVal">28.6%</strong>
+                        <small>D_Q = 1 - F</small>
                     </div>
-
-
                     <div class="quantum-card">
-
-                        <span>
-                            PATTERN PROBABILITY
-                        </span>
-
-                        <strong id="patternProbabilityQuantum">
-                            0%
-                        </strong>
-
+                        <span>SURFACE ALTERATION</span>
+                        <strong id="surfaceAlterationVal">48.2 km²</strong>
+                        <small>Modified Surface Area</small>
                     </div>
-
-
                     <div class="quantum-card">
-
-                        <span>
-                            QUANTUM SCORE
-                        </span>
-
-                        <strong id="quantumScore">
-                            --
-                        </strong>
-
+                        <span>CHANGE CLASSIFICATION</span>
+                        <strong class="highlight-yellow" id="changeClassificationVal">Water Body Contraction</strong>
+                        <small>High Urgency Response</small>
                     </div>
-
                 </div>
+            </section>
 
+            <!-- =================================================
+                 5. ANOMALY MONITOR VIEW
+                 ================================================= -->
+            <section id="anomalyView" class="view-layer">
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="section-kicker">ANOMALY MONITOR</span>
+                            <h3>Environmental Disturbance Screening</h3>
+                        </div>
+                        <div class="anomaly-actions">
+                            <button id="scanAnomaliesBtn" class="primary-btn">⚡ Run Screening Sweep</button>
+                        </div>
+                    </div>
 
-                <div class="quantum-result">
+                    <div class="metric-row">
+                        <div class="metric-card">
+                            <span>DISTURBANCE RISK</span>
+                            <strong><span id="anomalyRisk">24</span>%</strong>
+                            <small id="riskTrendText">↗ +3.2% vs last cycle</small>
+                        </div>
+                        <div class="metric-card">
+                            <span>PQC DIVERGENCE PROBABILITY</span>
+                            <strong><span id="patternProbability">18.4</span>%</strong>
+                            <small>Statistical Confidence: 94.2%</small>
+                        </div>
+                        <div class="metric-card">
+                            <span>OBSERVATION YEAR</span>
+                            <strong id="selectedYear">2026</strong>
+                            <small>Satellite Epoch</small>
+                        </div>
+                    </div>
 
-                    <p id="quantumResult">
-                        Quantum analysis has not been executed yet.
+                    <!-- Year Slider with Interactive Timeline -->
+                    <div class="year-control">
+                        <div class="year-header">
+                            <label for="yearSlider">Satellite Observation Timeline:</label>
+                            <span class="year-val" id="yearBadge">2026</span>
+                            <button class="small-btn" id="playTimelineBtn">▶ Play Timeline</button>
+                        </div>
+                        <input id="yearSlider" type="range" min="2015" max="2026" value="2026">
+                        <div class="year-ticks">
+                            <span>2015</span>
+                            <span>2017</span>
+                            <span>2019</span>
+                            <span>2021</span>
+                            <span>2023</span>
+                            <span>2025</span>
+                            <span>2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Anomaly Heatmap Canvas -->
+                    <div class="anomaly-heatmap-container">
+                        <div class="card-head compact">
+                            <div>
+                                <span class="section-kicker">HEATMAP RADAR</span>
+                                <h4>Geographic Disturbance Footprint</h4>
+                            </div>
+                            <span class="badge-mini" id="anomalyCountBadge">3 Active Anomalies Detected</span>
+                        </div>
+                        <canvas id="anomalyCanvas" width="800" height="260"></canvas>
+                    </div>
+
+                    <!-- Incident Logs -->
+                    <div class="anomaly-log-table">
+                        <div class="log-row log-header">
+                            <span>SEVERITY</span>
+                            <span>ANOMALY TYPE</span>
+                            <span>COORDINATES</span>
+                            <span>PROBABILITY</span>
+                            <span>ACTIONABLE IMPACT</span>
+                        </div>
+                        <div class="log-row warning">
+                            <span class="badge-sev sev-high">HIGH</span>
+                            <span>Thermal Hotspot (Wildfire Margin)</span>
+                            <span>-17.842°, -56.321° (Pantanal)</span>
+                            <span>91.2%</span>
+                            <span>Rapid dispatch alert issued to emergency responders</span>
+                        </div>
+                        <div class="log-row medium">
+                            <span class="badge-sev sev-med">MEDIUM</span>
+                            <span>Hydrological Reservoir Drawdown</span>
+                            <span>36.015°, -114.737° (Lake Mead)</span>
+                            <span>84.6%</span>
+                            <span>Water allocation quota adjustment recommended</span>
+                        </div>
+                        <div class="log-row nominal">
+                            <span class="badge-sev sev-low">LOW</span>
+                            <span>Canopy Density Loss</span>
+                            <span>-3.465°, -62.215° (Amazon)</span>
+                            <span>68.5%</span>
+                            <span>Forestry satellite pass scheduled for next orbit</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 6. QUANTUM ANALYSIS VIEW (4-Qubit PQC Simulator)
+                 ================================================= -->
+            <section id="quantumView" class="view-layer">
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="section-kicker">QUANTUM ANALYSIS</span>
+                            <h3>4-Qubit Parameterized Quantum Circuit (PQC) State Inspector</h3>
+                        </div>
+                        <button class="primary-btn" id="recomputeQuantumBtn">⚡ Recompute Statevector</button>
+                    </div>
+
+                    <!-- Top 4 Quantum Cards -->
+                    <div class="quantum-grid">
+                        <div class="quantum-card">
+                            <span>DOMINANT BASIS STATE</span>
+                            <strong id="quantumState">|0011⟩</strong>
+                            <small id="quantumStateBasis">Basis Index: 3 / 16</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>VON NEUMANN ENTROPY</span>
+                            <strong id="entropyValue">2.18</strong>
+                            <small>S = −∑ pᵢ log₂(pᵢ)</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>PATTERN PROBABILITY</span>
+                            <strong id="patternProbabilityQuantum">34.8%</strong>
+                            <small>Maximum Amplitude State</small>
+                        </div>
+                        <div class="quantum-card">
+                            <span>QUANTUM FIDELITY SCORE</span>
+                            <strong id="quantumScore">96.4%</strong>
+                            <small>Optimal QML Convergence</small>
+                        </div>
+                    </div>
+
+                    <!-- 16 Computational Basis States Histogram -->
+                    <div class="quantum-chart-box">
+                        <div class="card-head compact">
+                            <div>
+                                <span class="section-kicker">STATE VECTOR PROBABILITIES</span>
+                                <h4>16 Computational Basis States (|0000⟩ to |1111⟩)</h4>
+                            </div>
+                            <span class="badge-mini">Hilbert Space Dimension: 2⁴ = 16</span>
+                        </div>
+                        <div class="quantum-bars-container" id="quantumBarsContainer">
+                            <!-- 16 state bars generated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Qubit Bloch Sphere Polar Phase Wheels -->
+                    <div class="qubit-wheels-grid">
+                        <div class="qubit-wheel-card">
+                            <span>QUBIT 0 (Q₀)</span>
+                            <canvas id="wheelQ0" width="130" height="130"></canvas>
+                            <small id="q0-val">⟨Z⟩ = +0.82</small>
+                        </div>
+                        <div class="qubit-wheel-card">
+                            <span>QUBIT 1 (Q₁)</span>
+                            <canvas id="wheelQ1" width="130" height="130"></canvas>
+                            <small id="q1-val">⟨Z⟩ = -0.45</small>
+                        </div>
+                        <div class="qubit-wheel-card">
+                            <span>QUBIT 2 (Q₂)</span>
+                            <canvas id="wheelQ2" width="130" height="130"></canvas>
+                            <small id="q2-val">⟨Z⟩ = +0.67</small>
+                        </div>
+                        <div class="qubit-wheel-card">
+                            <span>QUBIT 3 (Q₃)</span>
+                            <canvas id="wheelQ3" width="130" height="130"></canvas>
+                            <small id="q3-val">⟨Z⟩ = -0.91</small>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Parameter Sliders (θ₀ to θ₇) -->
+                    <div class="circuit-tuner-card">
+                        <div class="card-head compact">
+                            <div>
+                                <span class="section-kicker">INTERACTIVE VARIATIONAL TUNER</span>
+                                <h4>Parameterized Gate Rotations (θ₀ … θ₇)</h4>
+                            </div>
+                            <button class="small-btn" id="resetAnglesBtn">↺ Reset Angles</button>
+                        </div>
+                        <div class="angles-grid" id="anglesSliderGrid">
+                            <!-- Injected by script: 8 angle sliders -->
+                        </div>
+                    </div>
+
+                    <div class="quantum-result">
+                        <p id="quantumResult">
+                            4-Qubit PQC inference executed successfully. The variational quantum kernel mapped the 8-D
+                            spatial CNN embedding into a high-dimensional Hilbert space, detecting subtle multi-spectral
+                            surface variations with quadratic quantum feature enhancement.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =================================================
+                 7. APPLICABILITY DEMONSTRATIONS STUDIO (VNQFF-09)
+                 ================================================= -->
+            <section id="applicabilityView" class="view-layer">
+                <!-- Hero & Domain Switcher -->
+                <div class="card applicability-hero-card">
+                    <div class="card-head">
+                        <div>
+                            <span class="section-kicker">VNQFF-09 EXECUTIVE SUITE</span>
+                            <h3 id="appDemoTitle">🌾 Agriculture: Crop Health & Precision Yield</h3>
+                        </div>
+                        <div class="app-switcher-tabs" id="appSwitcherTabs">
+                            <button class="app-tab-btn active" data-app="agriculture">🌾 Agriculture</button>
+                            <button class="app-tab-btn" data-app="water">💧 Water Mgmt</button>
+                            <button class="app-tab-btn" data-app="urban">🏙️ Urban Planning</button>
+                            <button class="app-tab-btn" data-app="disaster">🚨 Disaster Screening</button>
+                            <button class="app-tab-btn" data-app="space">🛰️ Space Operations</button>
+                        </div>
+                    </div>
+                    <p id="appDemoDescription" class="app-hero-desc">
+                        Large-scale crop monitoring across multi-spectral bands requires processing gigabytes of raw
+                        satellite data daily. Classical CNN extracts spatial parcel geometries, while the 4-qubit PQC
+                        classifies chlorophyll health and optimizes irrigation schedules with quadratic feature
+                        enhancement.
                     </p>
-
                 </div>
 
-            </div>
+                <!-- 2-Column Demonstration Workspace -->
+                <div class="dashboard-grid">
+                    <!-- Multi-Spectral Interactive Canvas -->
+                    <div class="card">
+                        <div class="card-head">
+                            <div>
+                                <span class="section-kicker">MULTI-SPECTRAL OBSERVATION</span>
+                                <h4 id="appCanvasTitle">Surface Reflectance & Feature Layer</h4>
+                            </div>
+                            <!-- Spectral layer buttons -->
+                            <div class="spectral-layer-buttons" id="spectralLayerBtns">
+                                <button class="layer-btn active" data-layer="rgb">RGB True Color</button>
+                                <button class="layer-btn" data-layer="nir">NIR False Color</button>
+                                <button class="layer-btn" data-layer="index" id="spectralIndexBtn">NDVI Vegetative
+                                    Index</button>
+                                <button class="layer-btn" data-layer="quantum">Quantum PQC Mask</button>
+                            </div>
+                        </div>
 
-        </section>
+                        <div class="canvas-wrapper">
+                            <canvas id="applicabilityCanvas" width="560" height="400"></canvas>
+                            <div class="canvas-hud-overlay" id="appCanvasHud">
+                                <span id="appHudMetric1">PARCEL COVERAGE: 8,420 ha</span>
+                                <span id="appHudMetric2">RESOLUTION: 10m Multi-spectral</span>
+                            </div>
+                        </div>
 
-    </main>
+                        <div class="app-canvas-controls">
+                            <div class="control-slider-group">
+                                <label id="appSliderLabel">NDVI Health Threshold:</label>
+                                <input type="range" id="appDomainSlider" min="0" max="100" value="65"
+                                    class="small-slider">
+                                <span id="appSliderVal">0.65</span>
+                            </div>
+                            <div class="control-actions">
+                                <button class="small-btn" id="runDomainInferenceBtn">⚡ Re-run Quantum Inference</button>
+                            </div>
+                        </div>
+                    </div>
 
-</div>
+                    <!-- Right Column: Quantum Solution & Domain Telemetry -->
+                    <div class="side-column">
+                        <!-- Quantum Solution & Speedup -->
+                        <div class="card quantum-solution-card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">QUANTUM ADVANTAGE</span>
+                                    <h4>Hybrid Classical-Quantum Solution</h4>
+                                </div>
+                            </div>
+                            <div class="solution-content" id="appQuantumSolutionText">
+                                <!-- Injected dynamically by JS -->
+                            </div>
+                            <div class="speedup-meter">
+                                <div class="speedup-header">
+                                    <span>COMPUTATIONAL SPEEDUP</span>
+                                    <strong id="appSpeedupValue">9.2x Faster</strong>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" id="appSpeedupBar" style="width: 88%;"></div>
+                                </div>
+                                <small id="appSpeedupNote">Classical Dense Matrix: 46ms → 4-Qubit PQC: 5.0ms</small>
+                            </div>
+                        </div>
 
+                        <!-- Live Domain Telemetry -->
+                        <div class="card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">DOMAIN TELEMETRY</span>
+                                    <h4 id="appTelemetryTitle">Crop Bio-Metrics</h4>
+                                </div>
+                            </div>
+                            <div class="domain-metrics-list" id="appDomainMetricsList">
+                                <!-- Dynamic per domain -->
+                            </div>
+                        </div>
 
-<!-- =========================================================
-     HELP MODAL
-     ========================================================= -->
-
-<div
-    id="helpModal"
-    class="modal hidden"
->
-
-    <div class="modal-card">
-
-        <button
-            id="closeHelp"
-            class="modal-close"
-        >
-            ×
-        </button>
-
-        <h2>
-            TerraVision
-        </h2>
-
-        <p>
-            Hybrid Quantum Satellite-Image Analysis
-        </p>
-
-        <div class="help-list">
-
-            <div>
-                🌍
-                <span>
-                    Drag the Earth to rotate it.
-                </span>
-            </div>
-
-            <div>
-                🔍
-                <span>
-                    Use the mouse wheel or controls to zoom.
-                </span>
-            </div>
-
-            <div>
-                📍
-                <span>
-                    Click any visible point on Earth
-                    to inspect its location.
-                </span>
-            </div>
-
-            <div>
-                ⚛️
-                <span>
-                    CNN features are compressed and
-                    passed through the simulated PQC.
-                </span>
-            </div>
-
-        </div>
-
+                        <!-- Actionable Directive -->
+                        <div class="card actionable-output-card">
+                            <div class="card-head compact">
+                                <div>
+                                    <span class="section-kicker">ACTIONABLE OUTPUT</span>
+                                    <h4>Operational Directive</h4>
+                                </div>
+                                <span class="badge-mini" id="appStatusBadge">VERIFIED</span>
+                            </div>
+                            <p id="appActionDirectiveText">
+                                Irrigation schedules for Zone 4-B optimized. Nitrogen fertilizer application adjusted
+                                based on quantum-enhanced vegetative index.
+                            </p>
+                            <button class="primary-btn full-width" id="dispatchDirectiveBtn">
+                                🚀 Dispatch Telemetry Directive
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-</div>
+    <!-- =========================================================
+         VNQFF-09 EXECUTIVE MISSION MODAL (From the User's Image!)
+         ========================================================= -->
+    <div id="vnqffModal" class="modal hidden">
+        <div class="modal-card vnqff-dialog">
+            <button id="closeVnqff" class="modal-close" title="Close modal">×</button>
 
+            <!-- Tag from image -->
+            <div class="vnqff-header-tag">VNQFF-09</div>
 
-<!-- =========================================================
-     TOAST
-     ========================================================= -->
+            <!-- Title from image -->
+            <h2 class="vnqff-dialog-title">Quantum-Enhanced Earth Observation Analysis</h2>
 
-<div
-    id="toast"
-    class="toast"
-></div>
+            <!-- Problem statement -->
+            <div class="vnqff-section">
+                <strong class="vnqff-label-purple">Problem:</strong>
+                <span class="vnqff-text">High-volume satellite imagery makes large-scale land-use, agriculture, water,
+                    urban, and disaster monitoring computationally demanding.</span>
+            </div>
 
+            <!-- Quantum approach -->
+            <div class="vnqff-section">
+                <strong class="vnqff-label-purple">Quantum Approach & How It Helps:</strong>
+                <span class="vnqff-text">Hybrid Quantum Satellite-Image Analysis — Classical CNN/vision layers extract
+                    spatial features, while a PQC/QML component performs classification or change detection on the
+                    compressed representation.</span>
+            </div>
 
-<!-- =========================================================
-     TENSORFLOW + MOBILENET
-     ========================================================= -->
+            <!-- Expected Impact -->
+            <div class="vnqff-section">
+                <strong class="vnqff-label-purple">Expected Impact:</strong>
+                <span class="vnqff-text">Faster extraction of actionable information from satellite imagery.</span>
+            </div>
 
-<script
-    defer
-    src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"
-></script>
+            <!-- Applicability -->
+            <div class="vnqff-section">
+                <strong class="vnqff-label-purple">Applicability:</strong>
+                <span class="vnqff-text">Agriculture, water management, urban planning, disaster management, and space
+                    programmes.</span>
+            </div>
 
-<script
-    defer
-    src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"
-></script>
+            <!-- Interactive quick-actions inside modal -->
+            <div class="vnqff-modal-actions">
+                <div class="modal-action-label">Explore Applicability Demonstrations:</div>
+                <div class="vnqff-domain-buttons">
+                    <button class="vnqff-btn" data-jump="agriculture">🌾 Agriculture & Crops</button>
+                    <button class="vnqff-btn" data-jump="water">💧 Water Management</button>
+                    <button class="vnqff-btn" data-jump="urban">🏙️ Urban Planning</button>
+                    <button class="vnqff-btn" data-jump="disaster">🚨 Disaster Screening</button>
+                    <button class="vnqff-btn" data-jump="space">🛰️ Space Programmes</button>
+                    <button class="vnqff-btn" data-jump="pipeline">⚛️ Hybrid Pipeline</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- =========================================================
+         CONNECT SATELLITE MODAL
+         ========================================================= -->
+    <div id="satelliteModal" class="modal hidden">
+        <div class="modal-card">
+            <button id="closeSatelliteModal" class="modal-close">×</button>
+            <h2>🛰️ Satellite Constellation Downlink</h2>
+            <p>Connect live observation streams from orbital earth observation constellations.</p>
 
-<!-- =========================================================
-     MAIN APPLICATION
-     ========================================================= -->
+            <div class="constellation-list">
+                <div class="constellation-option active" data-source="Sentinel-2 MSI">
+                    <div class="const-icon">🛰️</div>
+                    <div class="const-info">
+                        <strong>ESA Sentinel-2 (MSI)</strong>
+                        <small>10m Optical & RedEdge / 5-day Revisit</small>
+                    </div>
+                    <span class="const-status">LIVE STREAM</span>
+                </div>
+                <div class="constellation-option" data-source="Landsat-9 OLI-2">
+                    <div class="const-icon">🛰️</div>
+                    <div class="const-info">
+                        <strong>NASA / USGS Landsat-9 (OLI-2/TIRS-2)</strong>
+                        <small>30m Multi-spectral & Thermal Infrared</small>
+                    </div>
+                    <span class="const-status">AVAILABLE</span>
+                </div>
+                <div class="constellation-option" data-source="PlanetScope SuperDove">
+                    <div class="const-icon">🛰️</div>
+                    <div class="const-info">
+                        <strong>PlanetScope SuperDove Constellation</strong>
+                        <small>3m High-Resolution Daily Global Cadence</small>
+                    </div>
+                    <span class="const-status">AVAILABLE</span>
+                </div>
+            </div>
 
-<script
-    type="module"
-    src="script.js"
-></script>
+            <div class="modal-actions-right">
+                <button class="secondary-btn" id="cancelSatModal">Cancel</button>
+                <button class="primary-btn" id="confirmSatConnect">Connect Stream</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- =========================================================
+         HELP & GUIDE MODAL
+         ========================================================= -->
+    <div id="helpModal" class="modal hidden">
+        <div class="modal-card">
+            <button id="closeHelp" class="modal-close">×</button>
+            <h2>TerraVision Help & Architecture Guide</h2>
+            <p>Hybrid Quantum-Classical Earth Observation Intelligence Platform (VNQFF-09)</p>
+
+            <div class="help-list">
+                <div>
+                    🌍
+                    <span><strong>Earth Explorer:</strong> Click anywhere on the 3D WebGL Earth to select coordinates,
+                        inspect terrain biomes, and trigger instant quantum analysis. Use the toolbar to toggle
+                        day/night, coordinate grid, or auto-rotation.</span>
+                </div>
+                <div>
+                    ⚛️
+                    <span><strong>Hybrid Pipeline:</strong> Classical MobileNet CNN extracts spatial visual features,
+                        compressed into an 8-D latent representation z ∈ ℝ⁸, parameterizing a 4-qubit PQC variational
+                        circuit with CNOT entanglement.</span>
+                </div>
+                <div>
+                    🌱
+                    <span><strong>Land Cover:</strong> Classifies satellite imagery into Agriculture, Vegetation, Water,
+                        Urban, and Disturbed surfaces with live segmentation masks and bio-metric calculations (NDVI,
+                        canopy integrity).</span>
+                </div>
+                <div>
+                    🔄
+                    <span><strong>Change Detection:</strong> Compares baseline and current satellite passes using an
+                        interactive wipe slider, difference heatmap, and quantum fidelity metric F = |⟨ψ_base |
+                        ψ_curr⟩|².</span>
+                </div>
+                <div>
+                    🚨
+                    <span><strong>Anomaly Monitor:</strong> Screens environmental disturbance risks across 2015–2026
+                        epochs with automated threshold alerts for wildfire hotspots, flood runoff, and
+                        deforestation.</span>
+                </div>
+                <div>
+                    🔬
+                    <span><strong>Quantum Analysis:</strong> Inspects all 16 computational basis state amplitudes, von
+                        Neumann entropy, individual qubit Bloch phase polar wheels, and interactive variational gate
+                        angles (θ₀ … θ₇).</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         TERRA TUTOR COPILOT WIDGET (Bottom-Right AI Guide)
+         ========================================================= -->
+    <div class="terra-tutor-container" id="terraTutorContainer">
+        <!-- Floating Trigger: Circular Globe Icon with Hover Popup Preview -->
+        <button class="terra-tutor-launcher" id="terraTutorLauncher" aria-label="Open Terra Tutor" title="Terra Tutor — Click to open AI guide">
+            <span class="tutor-pulse-beacon"></span>
+            <span class="tutor-avatar-icon">🌍</span>
+            <span class="tutor-online-badge"></span>
+
+            <!-- Popup callout bubble shown when user hovers / brings mouse near -->
+            <div class="tutor-hover-callout" id="tutorHoverCallout">
+                <div class="callout-header">
+                    <span class="tutor-online-dot"></span>
+                    <strong>Terra Tutor AI</strong>
+                    <span class="callout-tag">COPILOT</span>
+                </div>
+                <div class="callout-desc">Quantum Mission Guide • Click to Open</div>
+                <div class="callout-arrow"></div>
+            </div>
+        </button>
+
+        <!-- Glassmorphism Tutor Dialog Panel -->
+        <div class="terra-tutor-panel hidden" id="terraTutorPanel">
+            <div class="tutor-head">
+                <div class="tutor-head-brand">
+                    <div class="tutor-head-icon">🤖</div>
+                    <div>
+                        <strong>Terra Tutor AI</strong>
+                        <small>VNQFF-09 Earth Intelligence Copilot</small>
+                    </div>
+                </div>
+                <div class="tutor-head-actions">
+                    <button class="tutor-icon-btn" id="tutorMinimizeBtn" title="Minimize">─</button>
+                    <button class="tutor-icon-btn" id="tutorCloseBtn" title="Close">×</button>
+                </div>
+            </div>
+
+            <div class="tutor-context-strip">
+                <span class="tutor-ctx-tag">CURRENT CONTEXT</span>
+                <span class="tutor-ctx-detail" id="tutorContextDetail">Earth Explorer • Target: Global Orbit</span>
+            </div>
+
+            <div class="tutor-messages" id="tutorMessages">
+                <div class="tutor-msg bot">
+                    <div class="tutor-bubble">
+                        👋 <strong>Welcome to TerraVision VNQFF-09!</strong> I am your AI <strong>Terra Tutor</strong>.
+                        <p style="margin-top: 6px;">
+                            Click anywhere on the realistic 3D Earth or select a preset to analyze all <strong>5 Applicability Domains</strong> (Agriculture, Water, Urban, Disaster, and Space Ops).
+                        </p>
+                        <p style="margin-top: 6px;">
+                            You can ask me questions about quantum feature encoding, the 4-qubit PQC ansatz, or any of the observation views!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="tutor-chips" id="tutorChips">
+                <button class="tutor-chip" data-query="explain_vnqff">🛰️ Explain VNQFF-09</button>
+                <button class="tutor-chip" data-query="domains">🌾 All 5 Domains</button>
+                <button class="tutor-chip" data-query="pqc_ansatz">⚛️ 4-Qubit PQC</button>
+                <button class="tutor-chip" data-query="change_detection">🔄 Change Detection</button>
+                <button class="tutor-chip" data-query="tour">🧭 Quick Tour</button>
+            </div>
+
+            <!-- User Query Input -->
+            <form class="tutor-input-bar" id="tutorForm">
+                <input type="text" id="tutorInput" placeholder="Ask Terra Tutor about VNQFF-09..." autocomplete="off">
+                <button type="submit" id="tutorSendBtn" title="Send Question">➤</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         TOAST NOTIFICATION CONTAINER
+         ========================================================= -->
+    <div id="toast" class="toast"></div>
+
+    <!-- =========================================================
+         APPLICATION SCRIPT
+         ========================================================= -->
+    <script src="script.js"></script>
 </body>
 
 </html>
