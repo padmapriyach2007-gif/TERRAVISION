@@ -37,11 +37,13 @@ st.markdown(
     iframe {
         border: none !important;
         width: 100% !important;
+        min-height: 100vh !important;
         height: 100vh !important;
     }
-    body {
+    body, html {
         margin: 0 !important;
-        overflow: hidden !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
     }
     </style>
     """,
@@ -116,12 +118,12 @@ html = html.replace(
 
 
 # ============================================================
-# STREAMLIT UI (ZERO-SCROLL VIEWPORT FIT)
+# STREAMLIT UI (MOBILE & DESKTOP ZERO-SCROLL / AUTO-FIT)
 # ============================================================
 
-# Version build: 2026-10-04.v13-shining-stars
+# Version build: 2026-10-04.v16-mobile-quantum-and-applicability-fixed
 components.html(
     html,
-    height=740,
-    scrolling=False,
+    height=880,
+    scrolling=True,
 )
