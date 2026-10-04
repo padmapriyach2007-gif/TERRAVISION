@@ -1003,7 +1003,8 @@ button {
 .earth-map {
     position: relative;
     flex: 1;
-    min-height: 0;
+    width: 100%;
+    min-height: 440px;
     height: 100%;
     border-radius: var(--radius-sm);
     overflow: hidden;
@@ -1014,6 +1015,7 @@ button {
 #earthGlobe {
     width: 100%;
     height: 100%;
+    min-height: 440px;
     position: absolute;
     inset: 0;
 }
@@ -4205,12 +4207,111 @@ body,
     }
 }
 
+/* ==========================================================================
+   MOBILE BOTTOM NAVIGATION BAR
+   ========================================================================== */
+
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    z-index: 1100;
+    background: rgba(3, 8, 20, 0.95);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border-top: 1px solid rgba(56, 229, 255, 0.28);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.75), 0 -1px 8px rgba(56, 229, 255, 0.15);
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    justify-content: space-around;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.mobile-bottom-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 48px;
+    height: 52px;
+    padding: 4px 2px;
+    border-radius: 10px;
+    color: var(--text-muted);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    background: transparent;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav-btn .mob-icon {
+    font-size: 17px;
+    line-height: 1;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.mobile-nav-btn .mob-label {
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.mobile-nav-btn:active {
+    transform: scale(0.92);
+}
+
+.mobile-nav-btn.active {
+    color: var(--accent-cyan);
+    background: rgba(56, 229, 255, 0.10);
+}
+
+.mobile-nav-btn.active .mob-icon {
+    transform: translateY(-2px) scale(1.12);
+    filter: drop-shadow(0 0 8px rgba(56, 229, 255, 0.75));
+}
+
+.mobile-nav-btn.active .mob-label {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.mobile-nav-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: linear-gradient(90deg, #38e5ff, #c084fc);
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(56, 229, 255, 0.9);
+}
+
 /* 2. iPad Pro / iPad Air / Tablets (<= 1024px) */
 @media screen and (max-width: 1024px) {
     .app {
         overflow: visible;
         height: 100%;
         min-height: 100vh;
+    }
+
+    .mobile-bottom-nav {
+        display: flex;
     }
 
     /* Off-Canvas Slide-out Drawer Navigation */
@@ -4248,14 +4349,14 @@ body,
         display: grid;
     }
 
-    /* Main view scrolls smoothly on tablet */
+    /* Main view scrolls smoothly on tablet with padding for bottom nav */
     .main {
         width: 100%;
         height: 100vh;
         max-height: 100vh;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 10px 14px;
+        padding: 10px 14px 76px 14px;
         -webkit-overflow-scrolling: touch;
     }
 
@@ -4267,14 +4368,26 @@ body,
         gap: 12px;
     }
 
-    .globe-container {
-        height: 440px;
-        min-height: 380px;
+    .map-card {
+        min-height: 440px;
+        height: auto;
     }
 
-    #globeCanvas {
-        height: 440px;
+    .earth-map {
+        min-height: 420px !important;
+        height: 420px !important;
         width: 100%;
+        position: relative;
+        display: block;
+    }
+
+    #earthGlobe {
+        min-height: 420px !important;
+        height: 420px !important;
+        width: 100%;
+        position: absolute;
+        inset: 0;
+        display: block;
     }
 
     /* Two-column grids stack on tablet */
@@ -4318,176 +4431,592 @@ body,
     .qubit-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .terra-tutor-trigger {
+        bottom: 74px;
+        right: 14px;
+    }
 }
 
 /* 3. Mobile Phones & Phablets (<= 768px) */
 @media screen and (max-width: 768px) {
     .main {
-        padding: 8px 10px;
+        padding: 8px 10px 84px 10px;
     }
 
     .topbar {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-        padding-bottom: 8px;
+        align-items: stretch;
+        gap: 6px;
+        padding-bottom: 6px;
     }
 
     .topbar-left {
         width: 100%;
-        justify-content: flex-start;
-    }
-
-    .top-actions {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .topbar h2 {
         font-size: 14px;
+        line-height: 1.2;
     }
 
     .topbar p {
         font-size: 9.5px;
+        display: none;
     }
 
     .top-tag-row {
-        flex-wrap: wrap;
+        display: flex;
+        flex-wrap: nowrap;
         gap: 4px;
+        align-items: center;
     }
 
-    .globe-container {
-        height: 320px;
-        min-height: 280px;
+    .eyebrow {
+        font-size: 8px !important;
     }
 
-    #globeCanvas {
-        height: 320px;
+    .pill-chip {
+        font-size: 8px !important;
+        padding: 1px 5px !important;
+    }
+
+    /* Top Actions: 3 equal buttons in 1 row */
+    .top-actions {
         width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    .floating-telemetry-hud {
-        position: static;
-        transform: none;
+    .mission-cta-btn,
+    .primary-btn,
+    .icon-btn {
+        flex: 1 1 0;
+        font-size: 9.5px !important;
+        padding: 6px 4px !important;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
+        border-radius: var(--radius-sm);
+    }
+
+    .mission-cta-btn .mission-code {
+        font-size: 8.5px;
+        padding: 1px 3px;
+        margin-right: 2px;
+    }
+
+    /* Compact 2x2 Telemetry Metadata Grid */
+    .metadata-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .meta-card {
+        padding: 5px 8px;
+        min-height: 44px;
+    }
+
+    .meta-card span {
+        font-size: 8px;
+        letter-spacing: 0.3px;
+        margin-bottom: 2px;
+    }
+
+    .meta-card strong {
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Earth Explorer 3D Globe on Mobile */
+    .map-card {
+        min-height: 400px;
+        height: auto;
+    }
+
+    .earth-map {
+        min-height: 380px !important;
+        height: 380px !important;
         width: 100%;
+        position: relative;
+        display: block;
+    }
+
+    #earthGlobe {
+        min-height: 380px !important;
+        height: 380px !important;
+        width: 100%;
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    /* Quick Preset Swipeable Ribbon */
+    .quick-preset-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 6px 8px;
+        background: rgba(9, 16, 32, 0.7);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--radius-sm);
+        margin-bottom: 6px;
+    }
+
+    .quick-preset-left {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .quick-preset-left::-webkit-scrollbar {
+        display: none;
+    }
+
+    .quick-preset-label {
+        font-size: 8.5px;
+        flex-shrink: 0;
+    }
+
+    .quick-preset-chip {
+        flex-shrink: 0;
+        font-size: 10px;
+        padding: 3px 7px;
+        white-space: nowrap;
+    }
+
+    .globe-click-hint {
+        font-size: 8.5px;
+        color: var(--text-muted);
+    }
+
+    /* Geospatial Inspector Mobile Grid */
+    .coordinate-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px;
+    }
+
+    .coordinate-card {
+        padding: 5px 8px;
+    }
+
+    .coordinate-card span {
+        font-size: 8px;
+    }
+
+    .coordinate-card strong {
+        font-size: 11px;
+    }
+
+    .side-bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
         margin-top: 8px;
     }
 
-    .floating-controls {
+    /* Floating Globe Toolbar */
+    .virtual-globe-toolbar {
         top: 8px;
         right: 8px;
         gap: 4px;
     }
 
+    .virtual-globe-toolbar button {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .globe-coordinate-display {
+        bottom: 8px;
+        left: 8px;
+        padding: 3px 8px;
+        font-size: 9px;
+    }
+
+    /* Hybrid Pipeline Mobile Optimization */
+    .pipeline-steps {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .pipeline-steps::-webkit-scrollbar {
+        display: none;
+    }
+
+    .pipeline-step {
+        flex: 0 0 120px;
+        min-width: 120px;
+        padding: 7px;
+    }
+
+    .pipeline-step strong {
+        font-size: 10.5px;
+    }
+
+    .pipeline-step small {
+        font-size: 8.5px;
+    }
+
+    .pipeline-arrow {
+        flex-shrink: 0;
+        font-size: 13px;
+        align-self: center;
+    }
+
     .vector-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+        gap: 5px;
     }
 
-    .quantum-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+    .vector-item {
+        padding: 6px;
     }
 
+    .circuit-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Land Cover Classification Mobile Grid */
     .class-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    .class-card {
+        padding: 8px;
+    }
+
+    .class-card strong {
+        font-size: 12px;
+    }
+
+    .class-card small {
+        display: none;
+    }
+
+    .class-coverage {
+        font-size: 12.5px;
+        font-weight: 700;
+        margin-top: 4px;
+    }
+
+    #landcoverCanvas {
+        width: 100% !important;
+        height: 250px !important;
+        min-height: 250px !important;
+    }
+
+    .sample-image-bar {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 5px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .sample-image-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sample-btn {
+        flex-shrink: 0;
+        font-size: 10px;
+        padding: 4px 7px;
+        white-space: nowrap;
     }
 
     .bio-metrics-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px;
     }
 
-    .metric-row {
-        grid-template-columns: repeat(2, 1fr);
+    /* Change Detection Mobile Wipe Viewer */
+    .wipe-wrapper {
+        height: 260px !important;
+        min-height: 260px !important;
+    }
+
+    .wipe-layer {
+        height: 260px !important;
+    }
+
+    .change-upload-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 6px;
     }
 
-    .app-hero-pillars-grid {
-        grid-template-columns: 1fr;
+    .change-arrow {
+        display: none;
     }
 
-    .wire-line {
-        grid-template-columns: 50px 28px 28px 50px 34px;
+    .upload-box {
+        padding: 8px;
     }
 
-    .modal-content {
-        width: 95vw;
-        max-height: 90vh;
-        padding: 14px;
-        margin: 10px;
+    .upload-box strong {
+        font-size: 11px;
     }
 
-    .terra-tutor-panel {
-        width: calc(100vw - 20px);
-        right: -6px;
-        bottom: 56px;
-        height: 420px;
-        max-height: 75vh;
+    .upload-box small {
+        font-size: 8px;
     }
 
-    .canvas-overlay-legend {
-        flex-wrap: wrap;
+    .wipe-toolbar {
+        flex-direction: column;
+        gap: 6px;
+        align-items: stretch;
+    }
+
+    .wipe-modes {
+        display: flex;
         gap: 4px;
+        overflow-x: auto;
+    }
+
+    .mode-toggle {
+        flex: 1 1 auto;
         font-size: 9.5px;
+        padding: 5px 6px;
+        white-space: nowrap;
+    }
+
+    /* Anomaly Monitor Mobile Grid */
+    .quantum-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px;
+    }
+
+    .quantum-card {
         padding: 6px 8px;
     }
 
-    .action-footer-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
+    .quantum-card span {
+        font-size: 8px;
+    }
+
+    .quantum-card strong {
+        font-size: 12px;
+    }
+
+    .quantum-card small {
+        font-size: 8px;
+    }
+
+    #anomalyRadarCanvas {
+        width: 100% !important;
+        height: 260px !important;
+        min-height: 260px !important;
+    }
+
+    .card-head {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+    }
+
+    .card-head > div:first-child {
+        width: 100%;
+    }
+
+    /* Quantum Analysis Studio Mobile */
+    .quantum-bars-container {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 6px !important;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .quantum-bars-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .quantum-state-bar {
+        flex: 0 0 34px !important;
+        min-width: 34px !important;
+    }
+
+    .qubit-wheels-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        margin-bottom: 6px;
+    }
+
+    .qubit-wheel-card {
+        padding: 6px 8px;
+    }
+
+    .qubit-wheel-card canvas {
+        width: 72px !important;
+        height: 72px !important;
+    }
+
+    .angles-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 5px !important;
+    }
+
+    /* Applicability Demonstrations Studio Mobile */
+    .app-switcher-tabs {
+        display: flex !important;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        gap: 5px !important;
+        padding-bottom: 4px;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .app-switcher-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .app-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 10.5px !important;
+        padding: 5px 9px !important;
+        white-space: nowrap !important;
+    }
+
+    .app-hero-pillars-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+    }
+
+    .app-pillar-card {
+        padding: 8px 10px !important;
+    }
+
+    .app-pillar-tag {
+        font-size: 8.5px;
+        margin-bottom: 3px;
+    }
+
+    .app-pillar-card p {
+        font-size: 11px !important;
+        line-height: 1.4;
+    }
+
+    .spectral-layer-buttons {
+        display: flex !important;
+        overflow-x: auto !important;
+        flex-wrap: nowrap !important;
+        gap: 4px !important;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .spectral-layer-buttons::-webkit-scrollbar {
+        display: none;
+    }
+
+    .layer-btn {
+        flex-shrink: 0 !important;
+        font-size: 9px !important;
+        padding: 4px 6px !important;
+        white-space: nowrap !important;
+    }
+
+    #applicabilityCanvas {
+        width: 100% !important;
+        height: 240px !important;
+        min-height: 240px !important;
+    }
+
+    /* Modals & Dialogs on Mobile */
+    .modal-content {
+        width: 95vw;
+        max-height: 86vh;
+        padding: 12px;
+        margin: 8px;
+    }
+
+    .terra-tutor-trigger {
+        bottom: 70px;
+        right: 12px;
+    }
+
+    .terra-tutor-panel {
+        width: calc(100vw - 16px);
+        right: -4px;
+        bottom: 66px;
+        height: 400px;
+        max-height: 68vh;
     }
 
     .styled-select {
         width: 100%;
+        font-size: 11px;
+        padding: 5px 8px;
     }
 }
 
 /* 4. Compact Mobile Screens (<= 480px) */
 @media screen and (max-width: 480px) {
-    .top-actions button {
-        flex: 1 1 calc(50% - 4px);
-        font-size: 9px;
-        padding: 5px 8px;
-        text-align: center;
-        justify-content: center;
+    .map-card {
+        min-height: 350px;
     }
 
-    .vector-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .earth-map {
+        min-height: 340px !important;
+        height: 340px !important;
     }
 
-    .quantum-card strong {
-        font-size: 13px;
+    #earthGlobe {
+        min-height: 340px !important;
+        height: 340px !important;
     }
 
-    .class-grid {
-        grid-template-columns: 1fr;
+    .class-grid .class-card:last-child {
+        grid-column: span 2;
     }
 
-    .metric-row {
-        grid-template-columns: 1fr;
+    .mobile-bottom-nav {
+        height: 58px;
     }
 
-    .qubit-grid {
-        grid-template-columns: 1fr;
+    .mobile-nav-btn {
+        min-width: 40px;
+        height: 48px;
+        padding: 2px 1px;
     }
 
-    .mission-cta-btn {
-        width: 100%;
-        justify-content: center;
+    .mobile-nav-btn .mob-icon {
+        font-size: 15px;
     }
 
-    .primary-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .pipeline-step {
-        min-width: 110px;
-        padding: 6px 8px;
+    .mobile-nav-btn .mob-label {
+        font-size: 8.5px;
     }
 }
