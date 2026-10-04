@@ -431,6 +431,18 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.toggle("active", btn.dataset.view === viewName);
         });
 
+        // Sync Mobile Bottom Nav Buttons
+        document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.view === viewName);
+        });
+
+        // Smooth scroll container to top on mobile/tablet view switch
+        const mainContainer = $("mainContainer");
+        if (mainContainer) {
+            mainContainer.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
         // Update titles
         const t = titles[viewName] || titles.explorer;
         if ($("pageTitle")) $("pageTitle").textContent = t[0];
@@ -453,8 +465,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Attach click listeners to all nav items
+    // Attach click listeners to all desktop nav items
     document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+            switchView(btn.dataset.view);
+        });
+    });
+
+    // Attach click listeners to all mobile bottom nav buttons
+    document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             switchView(btn.dataset.view);
         });
