@@ -121,9 +121,9 @@ html = html.replace(
 # STREAMLIT UI (MOBILE & DESKTOP ZERO-SCROLL / AUTO-FIT)
 # ============================================================
 
-# Version build: 2026-10-04.v16-mobile-quantum-and-applicability-fixed
+# Version build: 2026-10-04.v17-mobile-full-scroll-unlocked
 components.html(
     html,
-    height=880,
+    height=1000,
     scrolling=True,
 )
