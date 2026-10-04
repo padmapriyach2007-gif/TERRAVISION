@@ -28,26 +28,104 @@
 </head>
 
 <body>
+    <!-- Animated Cosmic Starfield & Nebula Background -->
+    <canvas id="cosmicStarfield" class="cosmic-canvas" aria-hidden="true"></canvas>
+
     <div class="app">
         <!-- =====================================================
              SIDEBAR NAVIGATION
              ===================================================== -->
         <aside class="sidebar" id="sidebar">
             <div class="brand">
-                <div class="brand-icon" id="brandLogo">🌍</div>
+                <div class="brand-icon" id="brandLogo">
+                    <svg class="brand-svg-logo" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="TerraVision Quantum Earth Logo">
+                        <defs>
+                            <radialGradient id="tvAtmosphere" cx="35%" cy="30%" r="65%">
+                                <stop offset="0%" stop-color="#38e5ff" stop-opacity="0.95" />
+                                <stop offset="45%" stop-color="#0284c7" stop-opacity="0.85" />
+                                <stop offset="85%" stop-color="#1e1b4b" stop-opacity="0.95" />
+                                <stop offset="100%" stop-color="#030712" stop-opacity="1" />
+                            </radialGradient>
+                            
+                            <linearGradient id="tvLand" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6ee7b7" />
+                                <stop offset="50%" stop-color="#10b981" />
+                                <stop offset="100%" stop-color="#059669" />
+                            </linearGradient>
+
+                            <linearGradient id="tvOrbitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38e5ff" />
+                                <stop offset="50%" stop-color="#c084fc" />
+                                <stop offset="100%" stop-color="#f43f5e" />
+                            </linearGradient>
+
+                            <radialGradient id="tvSpecular" cx="30%" cy="25%" r="45%">
+                                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75" />
+                                <stop offset="60%" stop-color="#38e5ff" stop-opacity="0.2" />
+                                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                            </radialGradient>
+
+                            <filter id="tvLogoGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="1.5" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+
+                        <!-- Outer Atmospheric Ring -->
+                        <circle cx="24" cy="24" r="16.5" fill="#38e5ff" fill-opacity="0.15" filter="url(#tvLogoGlow)" />
+                        <circle cx="24" cy="24" r="14.5" stroke="#38e5ff" stroke-width="0.75" stroke-opacity="0.4" stroke-dasharray="2 3" />
+
+                        <!-- Base Earth Globe -->
+                        <circle cx="24" cy="24" r="12.5" fill="url(#tvAtmosphere)" />
+
+                        <!-- Continents & Quantum Geodesic Mesh -->
+                        <g clip-path="url(#tvEarthClip)">
+                            <clipPath id="tvEarthClip">
+                                <circle cx="24" cy="24" r="12.5" />
+                            </clipPath>
+                            
+                            <!-- Geodesic Grid Lines -->
+                            <ellipse cx="24" cy="24" rx="6.5" ry="12.5" fill="none" stroke="#38e5ff" stroke-width="0.6" stroke-opacity="0.35" />
+                            <line x1="11.5" y1="24" x2="36.5" y2="24" stroke="#38e5ff" stroke-width="0.6" stroke-opacity="0.35" />
+                            <path d="M13 18.5 Q24 21 35 18.5" fill="none" stroke="#38e5ff" stroke-width="0.5" stroke-opacity="0.3" />
+                            <path d="M13 29.5 Q24 27 35 29.5" fill="none" stroke="#38e5ff" stroke-width="0.5" stroke-opacity="0.3" />
+
+                            <!-- Stylized Continents -->
+                            <path d="M17 15 Q19 14 21 16 Q23 18 20 20 Q18 20 16 18 Z" fill="url(#tvLand)" fill-opacity="0.9" />
+                            <path d="M23 16 Q26 15 29 17 Q30 20 28 23 Q25 24 24 21 Q22 19 23 16 Z" fill="url(#tvLand)" fill-opacity="0.95" />
+                            <path d="M18 22 Q21 22 21 25 Q20 29 17 28 Q16 25 18 22 Z" fill="url(#tvLand)" fill-opacity="0.88" />
+                            <circle cx="31" cy="26" r="1.5" fill="url(#tvLand)" fill-opacity="0.9" />
+                            
+                            <!-- Specular Glow Overlay -->
+                            <circle cx="24" cy="24" r="12.5" fill="url(#tvSpecular)" />
+                        </g>
+
+                        <!-- Orbital Satellite Trajectory -->
+                        <g class="logo-orbit-group">
+                            <path d="M6 31 C 8 18, 38 10, 42 17" fill="none" stroke="url(#tvOrbitGrad)" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="3 2" stroke-opacity="0.45" />
+                            <path d="M42 17 C 44 26, 12 37, 6 31" fill="none" stroke="url(#tvOrbitGrad)" stroke-width="1.8" stroke-linecap="round" filter="url(#tvLogoGlow)" />
+                            
+                            <!-- Orbiting Satellite Beacon -->
+                            <g class="logo-satellite-beacon">
+                                <circle cx="37" cy="22" r="2.2" fill="#ffffff" filter="url(#tvLogoGlow)" />
+                                <circle cx="37" cy="22" r="1.2" fill="#38e5ff" />
+                                <line x1="34" y1="22" x2="40" y2="22" stroke="#38e5ff" stroke-width="0.8" />
+                            </g>
+                        </g>
+
+                        <!-- Sparkle Star on Earth Rim -->
+                        <g class="logo-sparkle-star">
+                            <path d="M0 -3.2 L0.6 -0.6 L3.2 0 L0.6 0.6 L0 3.2 L-0.6 0.6 L-3.2 0 L-0.6 -0.6 Z" fill="#ffffff" filter="url(#tvLogoGlow)" />
+                            <circle cx="0" cy="0" r="0.8" fill="#38e5ff" />
+                        </g>
+                    </svg>
+                </div>
                 <div>
                     <strong>TerraVision</strong>
                     <span>QUANTUM EARTH OBSERVATION</span>
                 </div>
+                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">✕</button>
             </div>
-
-            <!-- VNQFF-09 Mission Badge Trigger -->
-            <button class="vnqff-badge-card" id="openMissionModalBtn"
-                title="Click to view VNQFF-09 Mission Architecture">
-                <div class="vnqff-tag">VNQFF-09</div>
-                <div class="vnqff-label">Quantum Earth Analysis</div>
-                <div class="vnqff-sub">Hybrid CNN + PQC / QML ↗</div>
-            </button>
 
             <div class="satellite-status">
                 <span class="status-dot"></span>
@@ -90,24 +168,36 @@
             <div class="sidebar-section">
                 <div class="sidebar-section-title">APPLICABILITY DOMAINS</div>
                 <div class="applicability-pills">
-                    <button class="app-pill" data-domain="agriculture" title="Agriculture & Crop Health">🌾
-                        Agriculture</button>
-                    <button class="app-pill" data-domain="water" title="Water Management & Reservoirs">💧 Water
-                        Mgmt</button>
-                    <button class="app-pill" data-domain="urban" title="Urban Planning & Density">🏙️ Urban
-                        Plan</button>
-                    <button class="app-pill" data-domain="disaster" title="Disaster & Wildfire Monitoring">🚨
-                        Disaster</button>
-                    <button class="app-pill" data-domain="space" title="Space Constellations & Downlinks">🛰️ Space
-                        Ops</button>
+                    <button class="app-pill" data-domain="agriculture" title="Agriculture & Crop Health">
+                        <span class="pill-icon">🌾</span>
+                        <span class="pill-label">Agriculture</span>
+                    </button>
+                    <button class="app-pill" data-domain="water" title="Water Management & Reservoirs">
+                        <span class="pill-icon">💧</span>
+                        <span class="pill-label">Water Mgmt</span>
+                    </button>
+                    <button class="app-pill" data-domain="urban" title="Urban Planning & Density">
+                        <span class="pill-icon">🏙️</span>
+                        <span class="pill-label">Urban Plan</span>
+                    </button>
+                    <button class="app-pill" data-domain="disaster" title="Disaster & Wildfire Monitoring">
+                        <span class="pill-icon">🚨</span>
+                        <span class="pill-label">Disaster</span>
+                    </button>
+                    <button class="app-pill" data-domain="space" title="Space Constellations & Downlinks">
+                        <span class="pill-icon">🛰️</span>
+                        <span class="pill-label">Space Ops</span>
+                    </button>
                 </div>
             </div>
 
             <div class="sidebar-bottom">
-                <button id="newAnalysisBtn" class="secondary-btn">＋ New Analysis</button>
-                <button id="helpBtn" class="secondary-btn">❓ Help & Guide</button>
+                <button id="newAnalysisBtn" class="secondary-btn" style="width: 100%; justify-content: center; text-align: center;">＋ New Analysis</button>
             </div>
         </aside>
+
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
         <!-- =====================================================
              MAIN CONTENT AREA
@@ -115,14 +205,20 @@
         <main class="main" id="mainContainer">
             <!-- HEADER / TOPBAR -->
             <header class="topbar">
-                <div>
-                    <div class="top-tag-row">
-                        <p class="eyebrow">EARTH OBSERVATION PLATFORM</p>
-                        <span class="pill-chip" id="quantumBadge">4-QUBIT PQC ENGINES ACTIVE</span>
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Navigation Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <div class="top-tag-row">
+                            <p class="eyebrow">EARTH OBSERVATION PLATFORM</p>
+                            <span class="pill-chip" id="quantumBadge">4-QUBIT PQC ENGINES ACTIVE</span>
+                        </div>
+                        <h2 id="pageTitle">Earth Explorer</h2>
+                        <p id="pageSubtitle">Explore and inspect satellite-style Earth observations with 3D geospatial targeting.</p>
                     </div>
-                    <h2 id="pageTitle">Earth Explorer</h2>
-                    <p id="pageSubtitle">Explore and inspect satellite-style Earth observations with 3D geospatial
-                        targeting.</p>
                 </div>
 
                 <div class="top-actions">
@@ -202,6 +298,21 @@
                                         <option value="kennedy">Kennedy Space Center, FL (Constellation Hub)</option>
                                     </optgroup>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Quick Exploration Bar: User-Friendly Presets & Guidance -->
+                        <div class="quick-preset-bar" id="quickPresetBar">
+                            <div class="quick-preset-left">
+                                <span class="quick-preset-label">⚡ QUICK TARGETS:</span>
+                                <button class="quick-preset-chip active" data-preset="california" title="Target California Agriculture">🌾 Central Valley</button>
+                                <button class="quick-preset-chip" data-preset="nile" title="Target Nile Water Inflow">💧 Nile Basin</button>
+                                <button class="quick-preset-chip" data-preset="tokyo" title="Target Tokyo Urban Density">🏙️ Tokyo Megacity</button>
+                                <button class="quick-preset-chip" data-preset="amazon" title="Target Amazon Forest Deforestation">🚨 Amazon Basin</button>
+                                <button class="quick-preset-chip" data-preset="svalbard" title="Target Svalbard Polar Downlink">🛰️ Arctic Svalbard</button>
+                            </div>
+                            <div class="globe-click-hint">
+                                <span class="hint-sparkle">✦</span> Click or drag anywhere on Earth to inspect 5 Domains
                             </div>
                         </div>
 
@@ -307,44 +418,39 @@
                             </div>
                         </div>
 
-                        <!-- Real-time Classification Summary -->
-                        <div class="card">
-                            <div class="card-head compact">
-                                <div>
-                                    <span class="section-kicker">CLASSIFICATION INFERENCE</span>
-                                    <h3>Land Cover State</h3>
+                        <!-- Compact Side Bottom Row (Side-by-Side to eliminate scrolling) -->
+                        <div class="side-bottom-row">
+                            <!-- Real-time Classification Summary -->
+                            <div class="card compact-stat-card">
+                                <div class="card-head compact">
+                                    <div>
+                                        <span class="section-kicker">CLASSIFICATION</span>
+                                        <h3 style="font-size: 11px;">Land Cover</h3>
+                                    </div>
+                                    <div class="classification-score">
+                                        <strong id="classificationScore" style="font-size: 12px;">94.8%</strong>
+                                    </div>
+                                </div>
+                                <div class="classification-result">
+                                    <strong id="classificationResult" style="font-size: 10px;">🌾 Agriculture</strong>
                                 </div>
                             </div>
-                            <div class="classification-result">
-                                <div>
-                                    <strong id="classificationResult">🌾 Agriculture (Cropland)</strong>
-                                    <p id="classificationDescription">Dense multi-crop pivot irrigation parcels detected
-                                        via CNN feature vector.</p>
-                                </div>
-                                <div class="classification-score">
-                                    <span>PQC SCORE</span>
-                                    <strong id="classificationScore">94.8%</strong>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Anomaly / Risk Meter -->
-                        <div class="card risk-panel">
-                            <div class="card-head compact">
-                                <div>
-                                    <span class="section-kicker">ENVIRONMENTAL DISTURBANCE</span>
-                                    <h3>Anomaly Screening Index</h3>
+                            <!-- Anomaly / Risk Meter -->
+                            <div class="card risk-panel compact-stat-card">
+                                <div class="card-head compact">
+                                    <div>
+                                        <span class="section-kicker">DISTURBANCE</span>
+                                        <h3 style="font-size: 11px;">Anomaly Risk</h3>
+                                    </div>
+                                    <div class="risk-value">
+                                        <strong id="riskValue" style="font-size: 13px;">24</strong><span style="font-size: 8.5px;">/100</span>
+                                    </div>
+                                </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div id="riskProgress" class="progress-bar" style="width:24%"></div>
                                 </div>
                             </div>
-                            <div class="risk-value">
-                                <strong id="riskValue">24</strong>
-                                <span>/ 100 Risk</span>
-                            </div>
-                            <div class="progress">
-                                <div id="riskProgress" class="progress-bar" style="width:24%"></div>
-                            </div>
-                            <div class="risk-caption" id="riskCaption">Nominal: Seasonal moisture fluctuation within
-                                expected parameters.</div>
                         </div>
                     </div>
                 </div>
@@ -912,7 +1018,11 @@
                         </div>
                     </div>
 
-                    <div class="quantum-result">
+                    <div class="quantum-result-banner">
+                        <div class="q-result-badge">
+                            <span class="pulse-dot-cyan"></span>
+                            <span>PQC STATUS: 16-D HILBERT CONVERGENCE</span>
+                        </div>
                         <p id="quantumResult">
                             4-Qubit PQC inference executed successfully. The variational quantum kernel mapped the 8-D
                             spatial CNN embedding into a high-dimensional Hilbert space, detecting subtle multi-spectral
@@ -941,12 +1051,20 @@
                             <button class="app-tab-btn" data-app="space">🛰️ Space Operations</button>
                         </div>
                     </div>
-                    <p id="appDemoDescription" class="app-hero-desc">
-                        Large-scale crop monitoring across multi-spectral bands requires processing gigabytes of raw
-                        satellite data daily. Classical CNN extracts spatial parcel geometries, while the 4-qubit PQC
-                        classifies chlorophyll health and optimizes irrigation schedules with quadratic feature
-                        enhancement.
-                    </p>
+                    <div class="app-hero-pillars-grid">
+                        <div class="app-pillar-card challenge">
+                            <div class="app-pillar-tag"><span class="pillar-dot red"></span>OPERATIONAL CHALLENGE</div>
+                            <p id="appChallengeText">Large-scale crop monitoring across multi-spectral bands requires processing gigabytes of raw satellite data daily with extreme spatial variability.</p>
+                        </div>
+                        <div class="app-pillar-card advantage">
+                            <div class="app-pillar-tag"><span class="pillar-dot cyan"></span>QUANTUM ADVANTAGE (PQC)</div>
+                            <p id="appQuantumAdvText">4-Qubit PQC variational state mapping projects 8-D spatial embeddings into 16-D Hilbert space, detecting sub-visual chlorophyll stress 6 days earlier.</p>
+                        </div>
+                        <div class="app-pillar-card directive">
+                            <div class="app-pillar-tag"><span class="pillar-dot purple"></span>ACTIONABLE DIRECTIVE</div>
+                            <p id="appDirectiveText">Dynamic irrigation schedules for Zone 4-B deployed. Nitrogen fertilizer application adjusted to reduce agricultural runoff by 14 kg/ha.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 2-Column Demonstration Workspace -->
@@ -962,14 +1080,13 @@
                             <div class="spectral-layer-buttons" id="spectralLayerBtns">
                                 <button class="layer-btn active" data-layer="rgb">RGB True Color</button>
                                 <button class="layer-btn" data-layer="nir">NIR False Color</button>
-                                <button class="layer-btn" data-layer="index" id="spectralIndexBtn">NDVI Vegetative
-                                    Index</button>
+                                <button class="layer-btn" data-layer="index" id="spectralIndexBtn">NDVI Vegetative Index</button>
                                 <button class="layer-btn" data-layer="quantum">Quantum PQC Mask</button>
                             </div>
                         </div>
 
                         <div class="canvas-wrapper">
-                            <canvas id="applicabilityCanvas" width="560" height="400"></canvas>
+                            <canvas id="applicabilityCanvas" width="800" height="420"></canvas>
                             <div class="canvas-hud-overlay" id="appCanvasHud">
                                 <span id="appHudMetric1">PARCEL COVERAGE: 8,420 ha</span>
                                 <span id="appHudMetric2">RESOLUTION: 10m Multi-spectral</span>
