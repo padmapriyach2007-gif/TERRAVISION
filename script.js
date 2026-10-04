@@ -589,12 +589,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // Radiant Vibrant Multi-Spectral Palette
         const starColors = [
             { r: 255, g: 255, b: 255, glow: "#ffffff" }, // Diamond Pure White
-            { r: 56,  g: 229, b: 255, glow: "#38e5ff" }, // Electric Quantum Cyan
+            { r: 56, g: 229, b: 255, glow: "#38e5ff" }, // Electric Quantum Cyan
             { r: 192, g: 132, b: 252, glow: "#c084fc" }, // Radiant Lavender / Violet
-            { r: 253, g: 224, b: 71,  glow: "#fde047" }, // Supernova Gold
-            { r: 52,  g: 211, b: 153, glow: "#34d399" }, // Emerald Auroral Green
+            { r: 253, g: 224, b: 71, glow: "#fde047" }, // Supernova Gold
+            { r: 52, g: 211, b: 153, glow: "#34d399" }, // Emerald Auroral Green
             { r: 251, g: 113, b: 133, glow: "#fb7185" }, // Stellar Rose Pink
-            { r: 96,  g: 165, b: 250, glow: "#60a5fa" }  // Deep Sapphire Blue
+            { r: 96, g: 165, b: 250, glow: "#60a5fa" }  // Deep Sapphire Blue
         ];
 
         // 1. BEACON CROSS SPARKLE STARS (Brilliant 4-Point & 8-Point Diffraction Flares)
@@ -3628,13 +3628,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const canvas = $("anomalyCanvas");
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
-        
+
         // Dynamically match internal canvas resolution to true display pixels for retina clarity
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
         const targetW = Math.round(rect.width * dpr);
         const targetH = Math.round(rect.height * dpr);
-        
+
         if (canvas.width !== targetW || canvas.height !== targetH) {
             canvas.width = targetW;
             canvas.height = targetH;
