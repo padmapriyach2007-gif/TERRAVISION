@@ -431,9 +431,13 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.toggle("active", btn.dataset.view === viewName);
         });
 
-        // Sync Mobile Bottom Nav Buttons
+        // Sync Mobile Bottom Nav Buttons and glide active tab into center view
         document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.view === viewName);
+            const isActive = btn.dataset.view === viewName;
+            btn.classList.toggle("active", isActive);
+            if (isActive) {
+                btn.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+            }
         });
 
         // Smooth scroll container to top on mobile/tablet view switch
