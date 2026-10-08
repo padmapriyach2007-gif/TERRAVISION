@@ -19,31 +19,31 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Remove default Streamlit header, footer, and padding */
-    #MainMenu, header, footer {
+    /* Remove default Streamlit header, footer, and margin clipping */
+    #MainMenu, header, footer, .stApp > header {
         display: none !important;
     }
-    .stApp > header {
-        display: none !important;
-    }
+    html, body, .stApp,
+    div[data-testid="stAppViewContainer"],
+    div[data-testid="stAppViewBlockContainer"],
+    section[data-testid="stMain"],
+    div[data-testid="stVerticalBlock"],
+    div[data-testid="stCustomComponentV1"],
     .block-container {
         padding: 0 !important;
         margin: 0 !important;
-        max-width: 100% !important;
-    }
-    div[data-testid="stVerticalBlock"] {
-        gap: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
     }
     iframe {
         border: none !important;
         width: 100% !important;
+        max-width: 100vw !important;
         min-height: 100vh !important;
         height: 100vh !important;
-    }
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden !important;
+        display: block !important;
     }
     </style>
     """,
