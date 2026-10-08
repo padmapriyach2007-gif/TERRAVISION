@@ -431,6 +431,11 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.classList.toggle("active", btn.dataset.view === viewName);
         });
 
+        // Toggle desktop top tab ribbon items
+        document.querySelectorAll(".top-tab-btn").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.view === viewName);
+        });
+
         // Sync Mobile Bottom Nav Buttons and glide active tab into center view
         document.querySelectorAll(".mobile-nav-btn").forEach(btn => {
             const isActive = btn.dataset.view === viewName;
@@ -471,6 +476,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Attach click listeners to all desktop nav items
     document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.addEventListener("click", () => {
+            switchView(btn.dataset.view);
+        });
+    });
+
+    // Attach click listeners to desktop top tab ribbon items
+    document.querySelectorAll(".top-tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             switchView(btn.dataset.view);
         });
